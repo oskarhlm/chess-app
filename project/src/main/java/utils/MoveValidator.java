@@ -132,18 +132,22 @@ public class MoveValidator {
 			int col = piece.getPosition().col + j;
 			Position squarePosition = new Position(row, col);
 			
-			if (board.getPiece(squarePosition) != null) {
-				if (board.getPiece(squarePosition).getColor() != piece.getColor()) {
-					legalDestinations.add(squarePosition);
+			if (! (row < 0 || row > 7 || col < 0 || col > 7)) {
+				if (board.getPiece(squarePosition) != null) {
+					if (board.getPiece(squarePosition).getColor() != piece.getColor()) {
+						legalDestinations.add(squarePosition);
+					}
 				}
 			}
 			
 			Position enPassentSquare = new Position(piece.getPosition().row, col);
 			
-			if (board.getPiece(enPassentSquare) != null) {
-				IPiece pieceOnSquare = board.getPiece(enPassentSquare);
-				if (pieceOnSquare.getColor() != piece.getColor() && pieceOnSquare == board.getEnPassentPiece()) {
-					legalDestinations.add(position);
+			if (! (row < 0 || row > 7 || col < 0 || col > 7)) {
+				if (board.getPiece(enPassentSquare) != null) {
+					IPiece pieceOnSquare = board.getPiece(enPassentSquare);
+					if (pieceOnSquare.getColor() != piece.getColor() && pieceOnSquare == board.getEnPassentPiece()) {
+						legalDestinations.add(position);
+					}
 				}
 			}
 		}

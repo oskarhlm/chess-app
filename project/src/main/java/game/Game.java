@@ -1,6 +1,7 @@
 package game;
 
 import board.*;
+import player.*;
 import pieces.*;
 import utils.Position;
 
@@ -16,16 +17,11 @@ public class Game {
 	public static void main(String[] args) {
 		Game game = new Game();
 		Board board = game.board;
-		IPiece n = board.getPiece(new Position(7, 1));
-		game.move(n, new Position(5, 2));
-		game.move(n, new Position(3, 1));
-		IPiece wp = board.getPiece(new Position(1, 2));
-		game.move(wp, new Position(3, 2));
-		game.move(wp, new Position(4, 2));
-		IPiece bp = board.getPiece(new Position(6, 1));
-		game.move(bp, new Position(4, 1));
-//		game.move(n, new Position(2, 3));
-		System.out.println(wp.getLegalMoves(board));
+		game.move(board.getPiece(new Position(1, 3)), new Position(3, 3));
+		game.move(board.getPiece(new Position(6, 2)), new Position(5, 2));
+		System.out.println(board.getBlackKing().isInCheck(board));
+		game.move(board.getPiece(new Position(0, 4)), new Position(4, 0));
+		System.out.println(board.getBlackKing().isInCheck(board));
 	}
 	
 	private void move(IPiece piece, Position position) {

@@ -1,5 +1,7 @@
 package pieces;
 
+import java.util.List;
+
 import board.*;
 import utils.*;
 
@@ -9,6 +11,7 @@ abstract class Piece implements IPiece {
 	private Position position;
 	private boolean hasMoved = false;
 	String colorPrefix;
+	List<IPiece> attackingPieces;
 	
 	Piece(Position position, Color color) {
 		this.position = position;

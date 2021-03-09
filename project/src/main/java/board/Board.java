@@ -1,19 +1,25 @@
 package board;
 
 import pieces.*;
-import utils.Color;
-import utils.Position;
+import utils.*;
+import player.*;
+
 
 public class Board {
 	
 	Square[][] squares = new Square[8][8];
 	private Pawn enPassentPiece;
+	private Player whitePlayer;
+	private Player blackPlayer;
 	
 	public Board() {
 		this.newGame();
 	}
 	
 	public void newGame() {
+		whitePlayer = new Player(Color.WHITE);
+		blackPlayer = new Player(Color.BLACK);
+		
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				squares[i][j] = new Square();
@@ -48,6 +54,17 @@ public class Board {
 			squares[6][i].placePiece(new Pawn(new Position(6, i), Color.BLACK));
 		}
 		
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				IPiece piece = this.getPiece(new Position(i, j));
+				if (piece != null) {
+					if (piece.getColor() == Color.WHITE) {
+						whitePlayer.addPiece(piece);
+					} else blackPlayer.addPiece(piece);
+				}
+			}
+		}
+		
 	}
 	
 	@Override
@@ -70,8 +87,6 @@ public class Board {
 		return squares[position.row][position.col];
 	}
 	
-	// Må bruke type IPiece (interfacet som implementeres av Piece-klassen)
-	// når man skal ha tak i en brikke man i utgangspunktet ikke vet typen av
 	public IPiece getPiece(Position position) {
 		return squares[position.row][position.col].getPiece();
 	}
@@ -82,6 +97,22 @@ public class Board {
 	
 	public Pawn getEnPassentPiece() {
 		return enPassentPiece;
+	}
+	
+	public Player getWhitePlayer() {
+		return whitePlayer;
+	}
+	
+	public Player getBlackPlayer() {
+		return blackPlayer;
+	}
+	
+	public King getWhiteKing() {
+		return getWhitePlayer().getKing();
+	}
+	
+	public King getBlackKing() {
+		return getBlackPlayer().getKing();
 	}
 	
 	
