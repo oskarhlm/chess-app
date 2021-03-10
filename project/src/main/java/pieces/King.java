@@ -6,9 +6,9 @@ import board.Board;
 import utils.*;
 
 public class King extends Piece {
-
+	
 	public King(Position position, Color color) {
-		super(position, color);
+		super(position, color, 'K');
 	}
 	
 	@Override
@@ -84,11 +84,4 @@ public class King extends Piece {
 		return true;
 	}
 
-//	public boolean altIsCheckMate(Board board) {
-//		if (!isInCheck(board)) return false;
-//		
-//		for (Position possiblePosition : this.getLegalMoves(board)) {		
-//			if (!isCheck(board, possiblePosition)) return false;
-//		}
-//	}
 }

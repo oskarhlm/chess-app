@@ -14,4 +14,5 @@ public interface IPiece {
 	void setHasMoved(Boolean bool);
 	List<Position> getLegalMoves(Board board);
 	void setEnPassentPiece(Board board, Position oldPosition, Position newPosition);
+	char getPieceLetter();
 }

@@ -8,9 +8,9 @@ import javafx.geometry.Pos;
 import utils.*;
 
 public class Bishop extends Piece {
-
+	
 	public Bishop(Position position, Color color) {
-		super(position, color);
+		super(position, color, 'B');
 	}
 	
 	@Override

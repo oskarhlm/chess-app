@@ -111,7 +111,7 @@ public class MoveValidator {
 
 	public void addPawnMoves() {
 		int steps = (piece.hasMoved()) ? 1 : 2;
-		int stepDir = (piece.getColor() == Color.WHITE) ? 1 : -1;
+		int stepDir = (piece.getColor() == Color.BLACK) ? 1 : -1;
 		
 		int i = 1;
 		while (i <= steps) {

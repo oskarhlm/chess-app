@@ -8,7 +8,7 @@ import utils.*;
 public class Pawn extends Piece {
 	
 	public Pawn(Position position, Color color) {
-		super(position, color);
+		super(position, color, 'p');
 	}
 	
 	@Override

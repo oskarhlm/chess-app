@@ -12,16 +12,18 @@ abstract class Piece implements IPiece {
 	private boolean hasMoved = false;
 	String colorPrefix;
 	List<IPiece> attackingPieces;
+	final public char pieceLetter;
 	
-	Piece(Position position, Color color) {
+	Piece(Position position, Color color, char pieceLetter) {
 		this.position = position;
 		this.color = color;
 		colorPrefix = (color == Color.WHITE) ? "w" : "b";
+		this.pieceLetter = pieceLetter;
 		
 		if (this instanceof Pawn) {
-			if (color == Color.WHITE && position.row > 1) {
+			if (color == Color.BLACK && position.row > 1) {
 				hasMoved = true;
-			} else if (color == Color.BLACK && position.row < 6) {
+			} else if (color == Color.WHITE && position.row < 6) {
 				hasMoved = true;
 			}
 		}
@@ -31,6 +33,7 @@ abstract class Piece implements IPiece {
 		this.position = piece.getPosition();
 		this.color = piece.getColor();
 		colorPrefix = (piece.getColor() == Color.WHITE) ? "w" : "b";
+		this.pieceLetter = piece.getPieceLetter();
 	}
 	
 	public void move(Board board, Position newPosition) throws IllegalArgumentException {
@@ -47,6 +50,10 @@ abstract class Piece implements IPiece {
 	
 	public Color getColor() {
 		return color;
+	}
+	
+	public char getPieceLetter() {
+		return pieceLetter;
 	}
 
 	public Position getPosition() {

@@ -6,9 +6,9 @@ import board.Board;
 import utils.*;
 
 public class Queen extends Piece {
-
+	
 	public Queen(Position position, Color color) {
-		super(position, color);
+		super(position, color, 'Q');
 	}
 	
 	@Override

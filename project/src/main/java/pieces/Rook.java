@@ -6,9 +6,9 @@ import board.Board;
 import utils.*;
 
 public class Rook extends Piece {
-
+	
 	public Rook(Position position, Color color) {
-		super(position, color);
+		super(position, color, 'R');
 	}
 	
 	@Override
