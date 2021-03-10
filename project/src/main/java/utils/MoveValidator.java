@@ -118,7 +118,7 @@ public class MoveValidator {
 			int row = piece.getPosition().row + i * stepDir;
 			int col = piece.getPosition().col;
 			Position squarePosition = new Position(row, col);
-
+			
 			if (board.getPiece(squarePosition) == null) {
 				legalDestinations.add(squarePosition);
 			} else break;
@@ -151,11 +151,6 @@ public class MoveValidator {
 				}
 			}
 		}
-	}
-	
-	private boolean pieceIsPinned() {
-		// TODO Check if the piece is pinned and cannot move
-		return false;
 	}
 	
 	public List<Position> getLegalDestinations() {

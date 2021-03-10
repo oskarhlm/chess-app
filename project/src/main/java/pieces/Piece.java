@@ -17,11 +17,25 @@ abstract class Piece implements IPiece {
 		this.position = position;
 		this.color = color;
 		colorPrefix = (color == Color.WHITE) ? "w" : "b";
+		
+		if (this instanceof Pawn) {
+			if (color == Color.WHITE && position.row > 1) {
+				hasMoved = true;
+			} else if (color == Color.BLACK && position.row < 6) {
+				hasMoved = true;
+			}
+		}
+	}
+	
+	Piece(Piece piece) {
+		this.position = piece.getPosition();
+		this.color = piece.getColor();
+		colorPrefix = (piece.getColor() == Color.WHITE) ? "w" : "b";
 	}
 	
 	public void move(Board board, Position newPosition) throws IllegalArgumentException {
 		if (! this.getLegalMoves(board).contains(newPosition)) {
-			throw new IllegalArgumentException("Illegal move!");
+			throw new IllegalArgumentException(String.format("Error board:\n%s\nIllegal move! %s", board, newPosition));
 		}
 		board.getSquare(position).removePiece();
 		board.getSquare(newPosition).placePiece(this);
@@ -39,8 +53,16 @@ abstract class Piece implements IPiece {
 		return position;
 	}
 	
+	public void setPosition(Position position) {
+		this.position = position;
+	}
+	
 	public boolean hasMoved() {
 		return hasMoved;
+	}
+	
+	public void setHasMoved(Boolean bool) {
+		hasMoved = bool;
 	}
 
 	public void setEnPassentPiece(Board board, Position oldPosition, Position newPosition) {};

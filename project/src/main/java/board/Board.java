@@ -16,6 +16,44 @@ public class Board {
 		this.newGame();
 	}
 	
+	public Board(Board board) {
+		this.whitePlayer = new Player(Color.WHITE);
+		this.blackPlayer = new Player(Color.BLACK);
+		
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				squares[i][j] = new Square();
+			}
+		}
+		
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				IPiece piece = board.getPiece(new Position(i, j));
+				if (piece != null) {
+					Color color = (piece.getColor() == Color.WHITE) ? Color.WHITE : Color.BLACK;
+					Position pos = piece.getPosition();
+					if (piece instanceof Rook) squares[pos.row][pos.col].placePiece(new Rook(pos, color));
+					else if (piece instanceof Knight) squares[pos.row][pos.col].placePiece(new Knight(pos, color));
+					else if (piece instanceof Bishop) squares[pos.row][pos.col].placePiece(new Bishop(pos, color));
+					else if (piece instanceof Queen) squares[pos.row][pos.col].placePiece(new Queen(pos, color));
+					else if (piece instanceof King) squares[pos.row][pos.col].placePiece(new King(pos, color));
+					else if (piece instanceof Pawn) squares[pos.row][pos.col].placePiece(new Pawn(pos, color));
+				}
+			}
+		}
+		
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				IPiece piece = this.getPiece(new Position(i, j));
+				if (piece != null) {
+					if (piece.getColor() == Color.WHITE) {
+						whitePlayer.addPiece(piece);
+					} else blackPlayer.addPiece(piece);
+				}
+			}
+		}
+	}
+	
 	public void newGame() {
 		whitePlayer = new Player(Color.WHITE);
 		blackPlayer = new Player(Color.BLACK);
@@ -77,6 +115,11 @@ public class Board {
 			output += "\n";
 		}
 		return output;
+	}
+	
+	public void move(IPiece piece, Position position) {
+		piece.move(this, position);
+		System.out.println("\n" + this.toString());
 	}
 	
 	public Square[][] getSquares() {
