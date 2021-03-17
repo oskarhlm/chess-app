@@ -3,6 +3,7 @@ package pieces;
 import java.util.List;
 
 import board.Board;
+import player.Player;
 import utils.*;
 
 public interface IPiece {
@@ -15,4 +16,6 @@ public interface IPiece {
 	List<Position> getLegalMoves(Board board);
 	void setEnPassentPiece(Board board, Position oldPosition, Position newPosition);
 	char getPieceLetter();
+	Player getPlayer();
+	void setPlayer(Player player);
 }

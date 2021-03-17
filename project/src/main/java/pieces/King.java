@@ -21,6 +21,11 @@ public class King extends Piece {
 		MoveValidator validator = new MoveValidator(board, this);
 		validator.addDiagonals();
 		validator.addStraigths();
+		
+		if (board.getPlayerToMove() == this.getPlayer()) {
+			validator.addCastling();
+		}
+		
 		return validator.getLegalDestinations();
 	}
 	

@@ -18,10 +18,38 @@ public class Game {
 	public static void main(String[] args) {
 		Game game = new Game("Classic setup");
 		Board board = game.board;
-		game.move("pe4");
-		game.move("pd4");
-		game.move("pd3");
 		
+		game.move("pe4");
+		game.move("pd5");
+		game.move("pd4");
+		System.out.println(board.getPlayerToMove());
+		game.move("Bc4");
+		System.out.println(board.getPlayerToMove());
+		game.move("Na3");
+		System.out.println(board.getPlayerToMove());
+		game.move("Nb5");
+//		game.move("Na7");
+//		game.move("Nf3");
+//		game.move("Be3");
+//		game.move("Qd2");
+//		game.move("Kc1");
+		
+//		game.move("pe4");
+//		game.move("pd4");
+//		game.move("pd3");
+//		game.move("Bc4");
+//		game.move("Na3");
+//		game.move("Nb5");
+//		game.move("Na7");
+//		System.out.println(board.getWhiteKing().getLegalMoves(board));
+//		game.move("Nf3");
+//		System.out.println(board.getWhiteKing().getLegalMoves(board));
+//		game.move("Be3");
+//		System.out.println(board.getWhiteKing().getLegalMoves(board));
+//		game.move("Qd2");
+//		System.out.println(board.getWhiteKing().getLegalMoves(board));
+//		game.move("Kc1");
+
 		
 //		board.move(board.getPiece(new Position(1, 3)), new Position(3, 3));
 //		board.move(board.getPiece(new Position(6, 2)), new Position(5, 2));

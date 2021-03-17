@@ -153,6 +153,41 @@ public class MoveValidator {
 		}
 	}
 	
+	public void addCastling() {
+		if (! (this.piece instanceof King) || piece.hasMoved()) return;
+		
+		for (int direction : dir) {
+			Board boardCopy = new Board(board);
+			King king = (piece.getColor() == Color.WHITE) 
+					? boardCopy.getWhiteKing() : boardCopy.getBlackKing();
+			if (king.isInCheck(boardCopy)) return;
+			int steps = 0;
+			
+			while (steps != 2) {
+				Position castlingStep = new Position(king.getPosition().row, king.getPosition().col + direction);
+				System.out.println(castlingStep);
+				if (! king.getLegalMoves(boardCopy).contains(castlingStep)) {
+					break;
+				} else {
+					king.move(boardCopy, castlingStep);
+					steps++;
+				}
+				
+				if (steps == 2) {
+					int rookColAdd = (direction == 1) ? 1 : -2;
+					IPiece rook = board.getPiece(new Position(king.getPosition().row, king.getPosition().col + rookColAdd));
+					if (rook instanceof Rook && !rook.hasMoved()) {
+						legalDestinations.add(castlingStep);
+					}
+				}
+			}
+			
+			boardCopy = new Board(board);
+			king = (piece.getColor() == Color.WHITE) 
+					? boardCopy.getWhiteKing() : boardCopy.getBlackKing();
+		}
+	}
+	
 	public List<Position> getLegalDestinations() {
 		return legalDestinations;
 	}

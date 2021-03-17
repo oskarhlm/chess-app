@@ -10,9 +10,9 @@ public class Board {
 	
 	Square[][] squares = new Square[8][8];
 	private Pawn enPassentPiece;
-	private Player whitePlayer;
-	private Player blackPlayer;
-	private Player playerToMove;
+	private Player whitePlayer = new Player(Color.WHITE);
+	private Player blackPlayer = new Player(Color.BLACK);
+	private Player playerToMove = whitePlayer;
 	
 	public Board(String gameType) {
 		if (gameType.equals("Classic setup")) newGame();
@@ -20,8 +20,8 @@ public class Board {
 	}
 	
 	public Board(Board board) {
-		this.whitePlayer = new Player(Color.WHITE);
-		this.blackPlayer = new Player(Color.BLACK);
+//		this.whitePlayer = new Player(Color.WHITE);
+//		this.blackPlayer = new Player(Color.BLACK);
 		
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
@@ -72,15 +72,19 @@ public class Board {
 				if (piece != null) {
 					if (piece.getColor() == Color.WHITE) {
 						whitePlayer.addPiece(piece);
-					} else blackPlayer.addPiece(piece);
+						piece.setPlayer(whitePlayer);
+					} else {
+						blackPlayer.addPiece(piece);
+						piece.setPlayer(blackPlayer);
+					}
 				}
 			}
 		}
 	}
 	
 	public void newGame() {
-		whitePlayer = new Player(Color.WHITE);
-		blackPlayer = new Player(Color.BLACK);
+//		whitePlayer = new Player(Color.WHITE);
+//		blackPlayer = new Player(Color.BLACK);
 		
 		initializeSquares();
 		
@@ -106,7 +110,7 @@ public class Board {
 		squares[7][2].placePiece(new Bishop(new Position(7, 2), Color.WHITE));
 		squares[7][5].placePiece(new Bishop(new Position(7, 5), Color.WHITE));
 		squares[7][3].placePiece(new Queen(new Position(7, 3), Color.WHITE));
-		squares[7][4].placePiece(new King(new Position(7, 4), Color.BLACK));
+		squares[7][4].placePiece(new King(new Position(7, 4), Color.WHITE));
 		
 		for (int i = 0; i < 8; i++) {
 			squares[6][i].placePiece(new Pawn(new Position(6, i), Color.WHITE));
@@ -117,8 +121,8 @@ public class Board {
 	}
 	
 	public void newBackRankMate() {
-		whitePlayer = new Player(Color.WHITE);
-		blackPlayer = new Player(Color.BLACK);
+//		whitePlayer = new Player(Color.WHITE);
+//		blackPlayer = new Player(Color.BLACK);
 		
 		initializeSquares();
 		
@@ -156,12 +160,34 @@ public class Board {
 		char pieceLetter = algNot.charAt(0);
 		Color pieceColor = (playerToMove == whitePlayer) ? Color.WHITE : Color.BLACK;
 		List<IPiece> sameColoredPieces = (pieceColor == Color.WHITE) ? getWhitePlayer().getPieces() : getBlackPlayer().getPieces();
+		
 		for (IPiece piece : sameColoredPieces) {
 			if (piece.getLegalMoves(this).contains(newPosition) && pieceLetter == piece.getPieceLetter()) {
+				Position oldPosition = piece.getPosition();
 				piece.move(this, newPosition);
+				
+				// Castling
+				if (piece instanceof King && Math.abs(newPosition.col - oldPosition.col) == 2) {
+					int rookCol = (newPosition.col - oldPosition.col < 0) ? 0 : 7;
+					int rookRow = (piece.getColor() == Color.WHITE) ? 7 : 0;
+					int rookColJump = (newPosition.col - oldPosition.col < 0) ? 3 : -2;
+					IPiece rook = this.getPiece(new Position(rookRow, rookCol));
+					System.out.println(rook);
+					Position oldRookPos = new Position(rookRow, rookCol);
+					Position newRookPos = new Position(rookRow, rookCol + rookColJump);
+					rook.setPosition(newRookPos);
+					this.getSquare(oldRookPos).removePiece();
+					this.getSquare(newRookPos).placePiece(rook);
+				}
+				
+				// TODO: Må fikses for situasjoner der to brikker av samme type og farge kan flytte til samme felt
 				System.out.println("\n" + this.toString());
+				playerToMove = (playerToMove == whitePlayer) ? blackPlayer : whitePlayer;
+				System.out.println(playerToMove);
 			} 
 		}
+		
+		
 	}
 	
 	public Position algNotToPosition(String algNot) {
@@ -211,6 +237,14 @@ public class Board {
 	
 	public King getBlackKing() {
 		return getBlackPlayer().getKing();
+	}
+	
+	public Player getPlayerToMove() {
+		return playerToMove;
+	}
+	
+	public void setPlayerToMove(Player playerToMove) {
+		this.playerToMove = playerToMove;
 	}
 	
 	

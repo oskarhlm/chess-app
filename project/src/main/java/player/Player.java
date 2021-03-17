@@ -16,6 +16,12 @@ public class Player {
 		this.color = color;
 	}
 	
+	@Override
+	public String toString() {
+		String color = (this.color == Color.WHITE) ? "White" : "Black";
+		return String.format("%s player", color);
+	}
+	
 	public List<IPiece> getPieces() {
 		return pieces;
 	}

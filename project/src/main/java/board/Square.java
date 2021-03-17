@@ -18,6 +18,10 @@ public class Square {
 		return piece;
 	}
 	
+	public void capturePieceOnSquare() {
+		piece.getPlayer().getPieces().remove(piece);
+	}
+	
 	@Override
 	public String toString() {
 		return (this.getPiece() == null) ? "|__|" : piece.toString();
