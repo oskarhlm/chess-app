@@ -172,6 +172,7 @@ public class Board {
 		// White pieces
 		squares[1][2].placePiece(new King(new Position(1, 2), Color.WHITE));
 		squares[7][1].placePiece(new Rook(new Position(7, 1), Color.WHITE));
+		squares[3][3].placePiece(new Knight(new Position(3, 3), Color.WHITE));
 		
 		// Black pieces
 		squares[0][0].placePiece(new King(new Position(0, 0), Color.BLACK));
@@ -293,6 +294,14 @@ public class Board {
 	
 	public King getWhiteKing() {
 		return getWhitePlayer().getKing();
+	}
+	
+	public void setWhiteKing(King king) {
+		whitePlayer.setKing(king);
+	}
+	
+	public void setBlackKing(King king) {
+		blackPlayer.setKing(king);
 	}
 	
 	public King getBlackKing() {

@@ -25,8 +25,8 @@ public class Game {
 		
 		while (!moveInput.equals("quit")) {
 			game.move(moveInput);
-			System.out.println(game.board.getWhiteKing().getLegalMoves(game.board));
-			System.out.println(game.board.getBlackKing().getLegalMoves(game.board));
+			System.out.println("White king legal moves: " + game.board.getWhiteKing().getLegalMoves(game.board));
+			System.out.println("Black king legal moves: " + game.board.getBlackKing().getLegalMoves(game.board));
 			if (game.hasEnded()) break;
 			moveInput = sc.nextLine();
 		}
@@ -46,10 +46,8 @@ public class Game {
 		}
 		
 		King playerKing = playerToMove.getKing();
-		King opponentKing = (playerToMove.getColor() == Color.WHITE)
-				? board.getBlackKing() : board.getWhiteKing();
 		
-		if (board.getPlayerToMove().getKing().isCheckMate(board)) {
+		if (King.isCheckMate(board, playerKing)) {
 			System.out.println("Check mate");
 			return true;
 		} else if (!hasLegalPieceMoves && playerKing.getLegalMoves(board).size() == 0) {

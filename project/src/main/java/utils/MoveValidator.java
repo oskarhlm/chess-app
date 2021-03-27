@@ -15,6 +15,7 @@ public class MoveValidator {
 	private Position position;
 	private Board board;
 	private List<Position> legalDestinations = new ArrayList<Position>();
+	private boolean isAttacked = false;
 	private IPiece piece;
 	private Integer multiplier[];
 	private Integer dir[] = new Integer[] { -1, 1 };
@@ -23,7 +24,12 @@ public class MoveValidator {
 		this.board = board;
 		this.piece = piece;
 		this.position = piece.getPosition();
-		this.multiplier = (piece instanceof King) ? new Integer[] { 1 } : new Integer[] { 1, 2, 3, 4, 5, 6, 7 };
+//		this.multiplier = (piece instanceof King) ? new Integer[] { 1 } : new Integer[] { 1, 2, 3, 4, 5, 6, 7 };
+		this.multiplier = new Integer[] { 1, 2, 3, 4, 5, 6, 7 };
+	}
+	
+	public boolean isAttacked() {
+		return isAttacked;
 	}
 	
 	public void addStraigths() {
@@ -36,11 +42,18 @@ public class MoveValidator {
 				if (row < 0 || row > 7 || col < 0 || col > 7) {
 					break;
 				} else if (board.getPiece(squarePosition) == null) {
-					legalDestinations.add(squarePosition);
+					if (!(piece instanceof King && mult > 1)) legalDestinations.add(squarePosition);
 				} else if (board.getPiece(squarePosition).getColor() == piece.getColor()) {
 					break;
 				} else {
-					legalDestinations.add(squarePosition);
+					if (!(piece instanceof King && mult > 1)) legalDestinations.add(squarePosition);
+					IPiece pieceOnSquare = board.getPiece(squarePosition);
+					
+					if (pieceOnSquare instanceof Queen || pieceOnSquare instanceof Rook) {
+//						System.out.println(String.format("%s is being attacked by %s!", piece, pieceOnSquare));
+						isAttacked = true;
+					}
+					
 					break;
 				}
 			}
@@ -55,11 +68,18 @@ public class MoveValidator {
 				if (row < 0 || row > 7 || col < 0 || col > 7) {
 					break;
 				} else if (board.getPiece(squarePosition) == null) {
-					legalDestinations.add(squarePosition);
+					if (!(piece instanceof King && mult > 1)) legalDestinations.add(squarePosition);
 				} else if (board.getPiece(squarePosition).getColor() == piece.getColor()) {
 					break;
 				} else {
-					legalDestinations.add(squarePosition);
+					if (!(piece instanceof King && mult > 1)) legalDestinations.add(squarePosition);
+					IPiece pieceOnSquare = board.getPiece(squarePosition);
+					
+					if (pieceOnSquare instanceof Queen || pieceOnSquare instanceof Rook) {
+//						System.out.println(String.format("%s is being attacked by %s!", piece, pieceOnSquare));
+						isAttacked = true;
+					}
+					
 					break;
 				}
 			}
@@ -78,11 +98,18 @@ public class MoveValidator {
 					if (row < 0 || row > 7 || col < 0 || col > 7) {
 						break;
 					} else if (board.getPiece(squarePosition) == null) {
-						legalDestinations.add(squarePosition);
+						if (!(piece instanceof King && mult > 1)) legalDestinations.add(squarePosition);
 					} else if (board.getPiece(squarePosition).getColor() == piece.getColor()) {
 						break;
 					} else {
-						legalDestinations.add(squarePosition);
+						if (!(piece instanceof King && mult > 1)) legalDestinations.add(squarePosition);
+						IPiece pieceOnSquare = board.getPiece(squarePosition);
+						
+						if (pieceOnSquare instanceof Queen || pieceOnSquare instanceof Bishop) {
+//							System.out.println(String.format("%s is being attacked by %s!", piece, pieceOnSquare));
+							isAttacked = true;
+						}
+						
 						break;
 					}
 				}
@@ -105,6 +132,13 @@ public class MoveValidator {
 							legalDestinations.add(squarePosition);
 						} else if (board.getPiece(squarePosition).getColor() != piece.getColor()) {
 							legalDestinations.add(squarePosition);
+							IPiece pieceOnSquare = board.getPiece(squarePosition);
+							
+							if (pieceOnSquare instanceof Knight) {
+//								System.out.println(String.format("%s is being attacked by %s!", piece, pieceOnSquare));
+//								System.out.println(squarePosition);
+								isAttacked = true;
+							}
 						}
 					}
 				}
@@ -139,6 +173,7 @@ public class MoveValidator {
 				if (board.getPiece(squarePosition) != null) {
 					if (board.getPiece(squarePosition).getColor() != piece.getColor()) {
 						legalDestinations.add(squarePosition);
+						// TODO: Fix checks
 					}
 				}
 			}
@@ -164,7 +199,7 @@ public class MoveValidator {
 			Board boardCopy = new Board(board);
 			King king = (piece.getColor() == Color.WHITE) 
 					? boardCopy.getWhiteKing() : boardCopy.getBlackKing();
-			if (king.isInCheck(boardCopy)) return;
+			if (King.isCheck(boardCopy, king)) return;
 			int steps = 0;
 			
 			while (steps != 2) {
@@ -197,15 +232,26 @@ public class MoveValidator {
 		
 		for (Position destination : legalDestinations) {
 			Board boardCopy = new Board(board);
-			King playerKing = (piece.getColor() == Color.WHITE) ? boardCopy.getWhiteKing() : boardCopy.getBlackKing();
+			
 			Square pieceSquare = boardCopy.getSquare(piece.getPosition());
 			Square pieceDestination = boardCopy.getSquare(destination);
 			
 			pieceSquare.removePiece();
 			pieceDestination.placePiece(piece);
 			
-			if (playerKing.isCheck(boardCopy, destination)) {
+			if (piece instanceof King) {
+				if (piece.getColor() == Color.WHITE) {
+					boardCopy.setWhiteKing(new King(destination, Color.WHITE));
+				}  else {
+					boardCopy.setBlackKing(new King(destination, Color.BLACK));
+				}
+			}
+			
+			King playerKing = (piece.getColor() == Color.WHITE) ? boardCopy.getWhiteKing() : boardCopy.getBlackKing();
+			
+			if (King.isCheck(boardCopy, playerKing)) {
 				destinationsToRemove.add(destination);
+//				System.out.println("removed destination " + destination + " for " + piece);
 			}
 		}
 		
@@ -213,9 +259,7 @@ public class MoveValidator {
  	}
 	
 	public List<Position> getLegalDestinations() {
-//		System.out.println(piece + ": " + legalDestinations);
-//		accountForChecks();
-//		System.out.println(piece + ": " + legalDestinations);
+		accountForChecks();
 		return legalDestinations;
 	}
 	
