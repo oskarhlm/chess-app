@@ -3,6 +3,8 @@ package board;
 import pieces.*;
 import utils.*;
 import player.*;
+
+import java.lang.reflect.Constructor;
 import java.util.*;
 
 
@@ -14,20 +16,34 @@ public class Board {
 	private Player blackPlayer = new Player(Color.BLACK);
 	private Player playerToMove = whitePlayer;
 	
-	public Board(String gameType) {
-		if (gameType.equals("Classic setup")) newGame();
-		else if (gameType.equals("Staircase mate")) newBackRankMate();
+	public enum GameType {
+		CLASSIC_SETUP,
+		STAIRCASE_MATE,
+		PROMOTION,
+		STALE_MATE
+	}
+	
+	public Board(GameType gameType) {
+		switch (gameType) {
+			case CLASSIC_SETUP: 
+				newGame();
+				break;
+			case STAIRCASE_MATE:
+				stairCaseMate();
+				break;
+			case PROMOTION:
+				promotionPosition();
+				break;
+			case STALE_MATE:
+				staleMate();
+				break;
+			default:
+				throw new IllegalArgumentException("Unexpected value: " + gameType);
+		}
 	}
 	
 	public Board(Board board) {
-//		this.whitePlayer = new Player(Color.WHITE);
-//		this.blackPlayer = new Player(Color.BLACK);
-		
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				squares[i][j] = new Square();
-			}
-		}
+		initializeSquares();
 		
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
@@ -82,10 +98,7 @@ public class Board {
 		}
 	}
 	
-	public void newGame() {
-//		whitePlayer = new Player(Color.WHITE);
-//		blackPlayer = new Player(Color.BLACK);
-		
+	private void newGame() {
 		initializeSquares();
 		
 		// Black pieces
@@ -120,10 +133,7 @@ public class Board {
 		playerToMove = whitePlayer;
 	}
 	
-	public void newBackRankMate() {
-//		whitePlayer = new Player(Color.WHITE);
-//		blackPlayer = new Player(Color.BLACK);
-		
+	private void stairCaseMate() {
 		initializeSquares();
 		
 		// Black pieces
@@ -136,6 +146,40 @@ public class Board {
 
 		addPiecesToPlayer(whitePlayer, blackPlayer);	
 		playerToMove = blackPlayer;
+		getWhiteKing().setHasMoved(true);
+		getBlackKing().setHasMoved(true);
+	}
+	
+	private void promotionPosition() {
+		initializeSquares();
+		
+		// White pieces
+		squares[3][2].placePiece(new King(new Position(3, 2), Color.WHITE));
+
+		// Black pieces
+		squares[2][5].placePiece(new King(new Position(2, 5), Color.BLACK));
+		squares[6][5].placePiece(new Pawn(new Position(6, 5), Color.BLACK));
+		
+		addPiecesToPlayer(whitePlayer, blackPlayer);
+		playerToMove = whitePlayer;
+		getWhiteKing().setHasMoved(true);
+		getBlackKing().setHasMoved(true);
+	}
+	
+	private void staleMate() {
+		initializeSquares();
+		
+		// White pieces
+		squares[1][2].placePiece(new King(new Position(1, 2), Color.WHITE));
+		squares[7][1].placePiece(new Rook(new Position(7, 1), Color.WHITE));
+		
+		// Black pieces
+		squares[0][0].placePiece(new King(new Position(0, 0), Color.BLACK));
+		
+		addPiecesToPlayer(whitePlayer, blackPlayer);
+		playerToMove = whitePlayer;
+		getWhiteKing().setHasMoved(true);
+		getBlackKing().setHasMoved(true);
 	}
 	
 	@Override
@@ -160,6 +204,7 @@ public class Board {
 		char pieceLetter = algNot.charAt(0);
 		Color pieceColor = (playerToMove == whitePlayer) ? Color.WHITE : Color.BLACK;
 		List<IPiece> sameColoredPieces = (pieceColor == Color.WHITE) ? getWhitePlayer().getPieces() : getBlackPlayer().getPieces();
+		boolean promotion = false;
 		
 		for (IPiece piece : sameColoredPieces) {
 			if (piece.getLegalMoves(this).contains(newPosition) && pieceLetter == piece.getPieceLetter()) {
@@ -180,14 +225,29 @@ public class Board {
 					this.getSquare(newRookPos).placePiece(rook);
 				}
 				
+				// Promotion
+				int promotionRow = (pieceColor == Color.WHITE) ? 0 : 7;
+				
+				if (piece instanceof Pawn && newPosition.row == promotionRow) {
+					promotion = true;
+				}
+				
 				// TODO: Må fikses for situasjoner der to brikker av samme type og farge kan flytte til samme felt
-				System.out.println("\n" + this.toString());
+				
 				playerToMove = (playerToMove == whitePlayer) ? blackPlayer : whitePlayer;
-				System.out.println(playerToMove);
 			} 
 		}
 		
+		if (promotion) {
+			this.getSquare(newPosition).capturePieceOnSquare();
+			Queen newQueen = new Queen(new Position(newPosition.row, newPosition.col), pieceColor);
+			Player player = (pieceColor == Color.WHITE) ? whitePlayer : blackPlayer;
+			player.addPiece(newQueen);
+			squares[newPosition.row][newPosition.col].placePiece(newQueen);
+		}
 		
+		System.out.println("\n" + this.toString());
+		System.out.println("Player to move: " + playerToMove);
 	}
 	
 	public Position algNotToPosition(String algNot) {

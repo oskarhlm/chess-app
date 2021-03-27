@@ -1,5 +1,6 @@
 package pieces;
 
+import java.util.Arrays;
 import java.util.List;
 import pieces.*;
 import board.Board;
@@ -26,16 +27,54 @@ public class King extends Piece {
 			validator.addCastling();
 		}
 		
+		List<Position> legalDestinations = validator.getLegalDestinations();
+		accountForOpponentKingVicinity(board, legalDestinations);
+		
 		return validator.getLegalDestinations();
 	}
 	
-	private boolean isCheck(Board board, Position kingPosition) {
+	private void accountForOpponentKingVicinity(Board board, List<Position> destinations) {
+		List<Integer> dirs = Arrays.asList(-1, 0, 1);
+		Position opponentKingPosition = (this.getColor() == Color.WHITE) 
+				? board.getBlackKing().getPosition() : board.getWhiteKing().getPosition();
+		
+		for (int i : dirs) {
+			for (int j : dirs) {
+				Position illegalDestination = new Position(opponentKingPosition.row + i, opponentKingPosition.col + j);
+				
+				if (destinations.contains(illegalDestination)) {
+					destinations.remove(illegalDestination);
+				}
+			}
+		}
+	}
+	
+	private List<Position> removeIllegalMoves(Board board, List<Position> destinations) {
+		Board boardCopy = new Board(board);
+		
+		for (Position destination : destinations) {
+			boardCopy.getSquare(this.getPosition()).removePiece();
+			boardCopy.getSquare(destination).placePiece(this);
+			
+			if (this.isInCheck(boardCopy)) {
+				destinations.remove(destination);
+			}
+			
+			boardCopy = new Board(board);
+		}
+		
+		return destinations;
+	}
+	
+	public boolean isCheck(Board board, Position kingPosition) {
 		List<IPiece> opponentPieces = (this.getColor() == Color.WHITE) 
 				? board.getBlackPlayer().getPieces() 
 				: board.getWhitePlayer().getPieces();
 		
 		for (IPiece piece : opponentPieces) {
-			if (piece.getLegalMoves(board).contains(this.getPosition())) {
+			if (piece instanceof King) continue;
+			
+			if (piece.getLegalMoves(board).contains(kingPosition)) {
 				return true;
 			}
 		}
@@ -73,7 +112,7 @@ public class King extends Piece {
 				
 				System.out.println("Copy: \n" + boardCopy);
 				
-				if (!isCheck(boardCopy, boardCopy.getBlackKing().getPosition()) && ! (piece instanceof King)) {
+				if (!isCheck(boardCopy, boardCopy.getBlackKing().getPosition()) && !(piece instanceof King)) {
 					return false;
 				} 
 				

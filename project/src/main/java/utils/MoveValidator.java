@@ -2,9 +2,12 @@ package utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import board.Board;
+import board.Square;
+import javafx.geometry.Pos;
 import pieces.*;
 
 public class MoveValidator {
@@ -140,6 +143,7 @@ public class MoveValidator {
 				}
 			}
 			
+			// TODO: Does not capture on right square
 			Position enPassentSquare = new Position(piece.getPosition().row, col);
 			
 			if (! (row < 0 || row > 7 || col < 0 || col > 7)) {
@@ -154,7 +158,7 @@ public class MoveValidator {
 	}
 	
 	public void addCastling() {
-		if (! (this.piece instanceof King) || piece.hasMoved()) return;
+		if (!(this.piece instanceof King) || piece.hasMoved()) return;
 		
 		for (int direction : dir) {
 			Board boardCopy = new Board(board);
@@ -187,8 +191,31 @@ public class MoveValidator {
 					? boardCopy.getWhiteKing() : boardCopy.getBlackKing();
 		}
 	}
+
+	private void accountForChecks() {
+		List<Position> destinationsToRemove = new ArrayList<>();
+		
+		for (Position destination : legalDestinations) {
+			Board boardCopy = new Board(board);
+			King playerKing = (piece.getColor() == Color.WHITE) ? boardCopy.getWhiteKing() : boardCopy.getBlackKing();
+			Square pieceSquare = boardCopy.getSquare(piece.getPosition());
+			Square pieceDestination = boardCopy.getSquare(destination);
+			
+			pieceSquare.removePiece();
+			pieceDestination.placePiece(piece);
+			
+			if (playerKing.isCheck(boardCopy, destination)) {
+				destinationsToRemove.add(destination);
+			}
+		}
+		
+		legalDestinations.removeAll(destinationsToRemove);
+ 	}
 	
 	public List<Position> getLegalDestinations() {
+//		System.out.println(piece + ": " + legalDestinations);
+//		accountForChecks();
+//		System.out.println(piece + ": " + legalDestinations);
 		return legalDestinations;
 	}
 	

@@ -37,4 +37,8 @@ public class Player {
 	public King getKing() {
 		return king;
 	}
+	
+	public Color getColor() {
+		return color;
+	}
 }

@@ -1,8 +1,10 @@
 package game;
 
 import board.*;
+import board.Board.GameType;
 import player.*;
 import pieces.*;
+import utils.Color;
 import utils.Position;
 import java.util.*;
 
@@ -10,58 +12,50 @@ public class Game {
 	
 	private Board board;
 	
-	public Game(String gameType) {
+	public Game(GameType gameType) {
 		board = new Board(gameType);
 		System.out.println(board.toString());
 	}
 	
 	public static void main(String[] args) {
-		Game game = new Game("Classic setup");
-		Board board = game.board;
+		Game game = new Game(GameType.CLASSIC_SETUP);
 		
-		game.move("pe4");
-		game.move("pd5");
-		game.move("pd4");
-		System.out.println(board.getPlayerToMove());
-		game.move("Bc4");
-		System.out.println(board.getPlayerToMove());
-		game.move("Na3");
-		System.out.println(board.getPlayerToMove());
-		game.move("Nb5");
-//		game.move("Na7");
-//		game.move("Nf3");
-//		game.move("Be3");
-//		game.move("Qd2");
-//		game.move("Kc1");
+		Scanner sc = new Scanner(System.in);
+		String moveInput = sc.nextLine();
 		
-//		game.move("pe4");
-//		game.move("pd4");
-//		game.move("pd3");
-//		game.move("Bc4");
-//		game.move("Na3");
-//		game.move("Nb5");
-//		game.move("Na7");
-//		System.out.println(board.getWhiteKing().getLegalMoves(board));
-//		game.move("Nf3");
-//		System.out.println(board.getWhiteKing().getLegalMoves(board));
-//		game.move("Be3");
-//		System.out.println(board.getWhiteKing().getLegalMoves(board));
-//		game.move("Qd2");
-//		System.out.println(board.getWhiteKing().getLegalMoves(board));
-//		game.move("Kc1");
+		while (!moveInput.equals("quit")) {
+			game.move(moveInput);
+			System.out.println(game.board.getWhiteKing().getLegalMoves(game.board));
+			System.out.println(game.board.getBlackKing().getLegalMoves(game.board));
+			if (game.hasEnded()) break;
+			moveInput = sc.nextLine();
+		}
 
+		sc.close();
+	}
+	
+	private boolean hasEnded() {
+		Player playerToMove = board.getPlayerToMove();
+		List<IPiece> playerToMovePieces = playerToMove.getPieces();
+		boolean hasLegalPieceMoves = false;
 		
-//		board.move(board.getPiece(new Position(1, 3)), new Position(3, 3));
-//		board.move(board.getPiece(new Position(6, 2)), new Position(5, 2));
-//		board.move(board.getPiece(new Position(6, 1)), new Position(4, 1));
-//		System.out.println(board.getBlackKing().isInCheck(board));
-//		board.move(board.getPiece(new Position(0, 4)), new Position(4, 0));
-//		System.out.println(board.getBlackKing().isCheckMate(board));
-//		System.out.println(board);
-//		
-//		System.out.println(board.getWhiteKing().isCheckMate(board));
-//		board.move(board.getPiece(new Position(2, 1)), new Position(0, 1));
-//		System.out.println(board.getWhiteKing().isCheckMate(board));
+		for (IPiece piece : playerToMovePieces) {
+			if (!(piece instanceof King) && piece.getLegalMoves(board).size() > 0) {
+				hasLegalPieceMoves = true;
+			}
+		}
+		
+		King playerKing = playerToMove.getKing();
+		King opponentKing = (playerToMove.getColor() == Color.WHITE)
+				? board.getBlackKing() : board.getWhiteKing();
+		
+		if (board.getPlayerToMove().getKing().isCheckMate(board)) {
+			System.out.println("Check mate");
+			return true;
+		} else if (!hasLegalPieceMoves && playerKing.getLegalMoves(board).size() == 0) {
+			System.out.println("Patt");
+			return true;
+		} return false;
 	}
 	
 	private void move(String algNot) {

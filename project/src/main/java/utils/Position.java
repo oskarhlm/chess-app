@@ -13,7 +13,7 @@ public class Position {
 	@Override
 	public String toString() {
 //		return String.format("(row %s, col %s)", row, col);
-		String columnLetter = "abcdefg";
+		String columnLetter = "abcdefgh";
 		return String.format("%s%s", columnLetter.charAt(col), 8 - row);
 	}
 	
