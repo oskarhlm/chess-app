@@ -4,8 +4,6 @@ import board.*;
 import board.Board.GameType;
 import player.*;
 import pieces.*;
-import utils.Color;
-import utils.Position;
 import java.util.*;
 
 public class Game {
@@ -18,7 +16,7 @@ public class Game {
 	}
 	
 	public static void main(String[] args) {
-		Game game = new Game(GameType.CLASSIC_SETUP);
+		Game game = new Game(GameType.STALE_MATE);
 		
 		Scanner sc = new Scanner(System.in);
 		String moveInput = sc.nextLine();
@@ -40,20 +38,24 @@ public class Game {
 		boolean hasLegalPieceMoves = false;
 		
 		for (IPiece piece : playerToMovePieces) {
-			if (!(piece instanceof King) && piece.getLegalMoves(board).size() > 0) {
+			if (piece.getLegalMoves(board).size() > 0) {
 				hasLegalPieceMoves = true;
 			}
 		}
 		
 		King playerKing = playerToMove.getKing();
 		
-		if (King.isCheckMate(board, playerKing)) {
-			System.out.println("Check mate");
+		if (King.isCheck(board, playerKing)) {
+			if (!hasLegalPieceMoves) {
+				System.out.println("Check mate!");
+				return true;
+			} else System.out.println("Check!");
+		} else if (!hasLegalPieceMoves) {
+			System.out.println("Stale mate!");
 			return true;
-		} else if (!hasLegalPieceMoves && playerKing.getLegalMoves(board).size() == 0) {
-			System.out.println("Patt");
-			return true;
-		} return false;
+		} 
+		
+		return false;
 	}
 	
 	private void move(String algNot) {

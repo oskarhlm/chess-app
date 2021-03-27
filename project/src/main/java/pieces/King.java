@@ -57,48 +57,5 @@ public class King extends Piece {
 		
 		return validator.isAttacked();
 	}
-	
-	public static boolean isCheckMate(Board board, King king) {
-		if (!isCheck(board, king) || king.getLegalMoves(board).size() != 0) return false;
-		
-		List<IPiece> checkedPlayersPieces = (king.getColor() == Color.BLACK) 
-				? board.getBlackPlayer().getPieces() 
-				: board.getWhitePlayer().getPieces();
-		
-		for (IPiece piece : checkedPlayersPieces) {
-			if (piece.getLegalMoves(board).size() != 0) {
-				return false;
-			}
-		}
-		
-		return true;
-	}
-	
-//	public boolean isCheckMate(Board board) {
-//		King king = board.getPlayerToMove().getKing();
-//		if (!isCheck(board, king) || king.getLegalMoves(board).size() != 0) return false;
-//		
-//		Board boardCopy = new Board(board);
-//		List<IPiece> checkedPlayersPieces = (this.getColor() == Color.BLACK) 
-//				? boardCopy.getBlackPlayer().getPieces() 
-//				: boardCopy.getWhitePlayer().getPieces();
-//		
-//		for (IPiece piece : checkedPlayersPieces) {
-//			Position oldPosition = piece.getPosition();
-//
-//			for (Position destination : piece.getLegalMoves(boardCopy)) {
-//				boardCopy.getSquare(oldPosition).removePiece();
-//				boardCopy.getSquare(destination).placePiece(piece);
-//				
-//				if (!isCheck(boardCopy, king)) {
-//					return false;
-//				} 
-//				
-//				boardCopy = new Board(board);
-//			}
-//		}
-//		
-//		return true;
-//	}
 
 }

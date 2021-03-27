@@ -176,6 +176,7 @@ public class Board {
 		
 		// Black pieces
 		squares[0][0].placePiece(new King(new Position(0, 0), Color.BLACK));
+		squares[0][2].placePiece(new Knight(new Position(0, 2), Color.BLACK));
 		
 		addPiecesToPlayer(whitePlayer, blackPlayer);
 		playerToMove = whitePlayer;
