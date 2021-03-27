@@ -49,9 +49,17 @@ abstract class Piece implements IPiece {
 			board.getSquare(newPosition).capturePieceOnSquare();
 			System.out.println(String.format("Captured piece on %s", newPosition));
 		}
+	
+		// Check if en passent capture
+		if (this instanceof Pawn && position.col != newPosition.col && board.getSquare(newPosition).getPiece() == null) {
+			Position enPassentPiecePosition = new Position(position.row, newPosition.col);
+			System.out.println("en passent: " + enPassentPiecePosition);
+			board.getSquare(enPassentPiecePosition).capturePieceOnSquare();
+			board.getSquare(enPassentPiecePosition).removePiece();
+			System.out.println(String.format("Captured piece on %s en passent", enPassentPiecePosition));
+		}
 		
 		board.getSquare(newPosition).placePiece(this);
-		
 		if (this instanceof Pawn) this.setEnPassentPiece(board, position, newPosition);
 		else board.setEnPassentPiece(null);
 		position = newPosition;

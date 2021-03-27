@@ -16,7 +16,7 @@ public class Game {
 	}
 	
 	public static void main(String[] args) {
-		Game game = new Game(GameType.STALE_MATE);
+		Game game = new Game(GameType.CLASSIC_SETUP);
 		
 		Scanner sc = new Scanner(System.in);
 		String moveInput = sc.nextLine();
@@ -25,6 +25,7 @@ public class Game {
 			game.move(moveInput);
 			System.out.println("White king legal moves: " + game.board.getWhiteKing().getLegalMoves(game.board));
 			System.out.println("Black king legal moves: " + game.board.getBlackKing().getLegalMoves(game.board));
+			System.out.println(game.board.getEnPassentPiece());
 			if (game.hasEnded()) break;
 			moveInput = sc.nextLine();
 		}
