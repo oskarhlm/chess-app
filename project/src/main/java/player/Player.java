@@ -38,6 +38,10 @@ public class Player {
 		return king;
 	}
 	
+	public void setKing(King king) {
+		this.king = king;
+	}
+	
 	public Color getColor() {
 		return color;
 	}

@@ -4,8 +4,6 @@ import board.*;
 import board.Board.GameType;
 import player.*;
 import pieces.*;
-import utils.Color;
-import utils.Position;
 import java.util.*;
 
 public class Game {
@@ -25,8 +23,9 @@ public class Game {
 		
 		while (!moveInput.equals("quit")) {
 			game.move(moveInput);
-			System.out.println(game.board.getWhiteKing().getLegalMoves(game.board));
-			System.out.println(game.board.getBlackKing().getLegalMoves(game.board));
+			System.out.println("White king legal moves: " + game.board.getWhiteKing().getLegalMoves(game.board));
+			System.out.println("Black king legal moves: " + game.board.getBlackKing().getLegalMoves(game.board));
+			System.out.println(game.board.getEnPassentPiece());
 			if (game.hasEnded()) break;
 			moveInput = sc.nextLine();
 		}
@@ -40,22 +39,24 @@ public class Game {
 		boolean hasLegalPieceMoves = false;
 		
 		for (IPiece piece : playerToMovePieces) {
-			if (!(piece instanceof King) && piece.getLegalMoves(board).size() > 0) {
+			if (piece.getLegalMoves(board).size() > 0) {
 				hasLegalPieceMoves = true;
 			}
 		}
 		
 		King playerKing = playerToMove.getKing();
-		King opponentKing = (playerToMove.getColor() == Color.WHITE)
-				? board.getBlackKing() : board.getWhiteKing();
 		
-		if (board.getPlayerToMove().getKing().isCheckMate(board)) {
-			System.out.println("Check mate");
+		if (King.isCheck(board, playerKing)) {
+			if (!hasLegalPieceMoves) {
+				System.out.println("Check mate!");
+				return true;
+			} else System.out.println("Check!");
+		} else if (!hasLegalPieceMoves) {
+			System.out.println("Stale mate!");
 			return true;
-		} else if (!hasLegalPieceMoves && playerKing.getLegalMoves(board).size() == 0) {
-			System.out.println("Patt");
-			return true;
-		} return false;
+		} 
+		
+		return false;
 	}
 	
 	private void move(String algNot) {
