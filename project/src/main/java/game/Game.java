@@ -23,9 +23,6 @@ public class Game {
 		
 		while (!moveInput.equals("quit")) {
 			game.move(moveInput);
-			System.out.println("White king legal moves: " + game.board.getWhiteKing().getLegalMoves(game.board));
-			System.out.println("Black king legal moves: " + game.board.getBlackKing().getLegalMoves(game.board));
-			System.out.println(game.board.getEnPassentPiece());
 			if (game.hasEnded()) break;
 			moveInput = sc.nextLine();
 		}

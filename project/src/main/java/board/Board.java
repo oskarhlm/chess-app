@@ -19,7 +19,8 @@ public class Board {
 		CLASSIC_SETUP,
 		STAIRCASE_MATE,
 		PROMOTION,
-		STALE_MATE
+		STALE_MATE,
+		NOTATION_TEST
 	}
 	
 	public Board(GameType gameType) {
@@ -35,6 +36,9 @@ public class Board {
 				break;
 			case STALE_MATE:
 				staleMate();
+				break;
+			case NOTATION_TEST:
+				notationTest();
 				break;
 			default:
 				throw new IllegalArgumentException("Unexpected value: " + gameType);
@@ -183,6 +187,25 @@ public class Board {
 		getBlackKing().setHasMoved(true);
 	}
 	
+	private void notationTest() {
+		initializeSquares();
+		
+		// White pieces
+		squares[1][2].placePiece(new King(new Position(1, 2), Color.WHITE));
+		squares[7][7].placePiece(new Knight(new Position(7, 7), Color.WHITE));
+		squares[3][7].placePiece(new Knight(new Position(3, 7), Color.WHITE));
+		squares[3][5].placePiece(new Knight(new Position(3, 5), Color.WHITE));
+		squares[7][5].placePiece(new Knight(new Position(7, 5), Color.WHITE));
+		
+		// Black pieces
+		squares[0][0].placePiece(new King(new Position(0, 0), Color.BLACK));
+		
+		addPiecesToPlayer(whitePlayer, blackPlayer);
+		playerToMove = whitePlayer;
+		getWhiteKing().setHasMoved(true);
+		getBlackKing().setHasMoved(true);
+	}
+	
 	@Override
 	public String toString() {
 		String output = "";
@@ -202,13 +225,72 @@ public class Board {
 	
 	public void move(String algNot) {
 		Position newPosition = algNotToPosition(algNot);
-		char pieceLetter = algNot.charAt(0);
+		char pieceLetter;
+		
+		if ("RNBQK".indexOf(algNot.charAt(0)) != -1) {
+			pieceLetter = algNot.charAt(0);
+		} else if (algNot.equals("O-O") || algNot.equals("O-O-O")) {
+			pieceLetter = 'K';
+		} else {
+			pieceLetter = 'p';
+		}
+		
+		// Accounting for case where to pieces of the same type can move to the same square
+		int pieceRow = -1;
+		int pieceCol = -1;
+		
+		if (pieceLetter == 'p' && algNot.length() >= 3) {
+			pieceCol = "abcdefgh".indexOf(algNot.charAt(0));
+		} else if (algNot.length() >= 4) {
+			
+			if ("abcdefgh".indexOf(algNot.charAt(1)) != -1) {
+				pieceCol = "abcdefgh".indexOf(algNot.charAt(1)); 
+			} 
+			
+			if (Character.isDigit(algNot.charAt(1))) {
+				pieceRow = 8 - Character.getNumericValue(algNot.charAt(1));
+			} else if (Character.isDigit(algNot.charAt(2))) {
+				pieceRow = 8 - Character.getNumericValue(algNot.charAt(2));
+			}
+		}
+		
 		Color pieceColor = (playerToMove == whitePlayer) ? Color.WHITE : Color.BLACK;
 		List<IPiece> sameColoredPieces = (pieceColor == Color.WHITE) ? getWhitePlayer().getPieces() : getBlackPlayer().getPieces();
 		boolean promotion = false;
 		
+		// Castling
+		if (algNot.equals("O-O") || algNot.equals("O-O-O")) {
+			System.out.println("hei");
+			int row = (pieceColor == Color.WHITE) ? 7 : 0;
+			newPosition = (algNot.equals("O-O"))
+					? new Position(row, 6) : new Position(row, 2);
+			System.out.println(newPosition);
+		}
+		
 		for (IPiece piece : sameColoredPieces) {
-			if (piece.getLegalMoves(this).contains(newPosition) && pieceLetter == piece.getPieceLetter()) {
+			Position piecePos = piece.getPosition();
+			
+			if (piece instanceof Knight) {
+				System.out.println(piecePos.col + "=?=" + pieceCol);
+				System.out.println(piece.getLegalMoves(this).contains(newPosition) + ", " + newPosition);
+				System.out.println(pieceLetter == piece.getPieceLetter());
+				System.out.println(piecePos.col == pieceCol && pieceRow == -1);
+			}
+			
+			if (piecePos.col == pieceCol && piecePos.row == -1) {
+				System.out.println(piece);
+				System.out.println(piece.getPosition());
+			}
+			
+			if (piece.getLegalMoves(this).contains(newPosition) && pieceLetter == piece.getPieceLetter()
+					&& ((pieceRow == -1 && pieceCol == -1) 
+					|| (piecePos.row == pieceRow && pieceCol == -1) 
+					|| (piecePos.col == pieceCol && pieceRow == -1)
+					|| (piecePos.row == pieceRow && piecePos.col == pieceCol)
+					)) {
+				
+				System.out.println("hei!");
+				
 				Position oldPosition = piece.getPosition();
 				piece.move(this, newPosition);
 				
@@ -233,8 +315,6 @@ public class Board {
 					promotion = true;
 				}
 				
-				// TODO: Må fikses for situasjoner der to brikker av samme type og farge kan flytte til samme felt
-				
 				playerToMove = (playerToMove == whitePlayer) ? blackPlayer : whitePlayer;
 			} 
 		}
@@ -251,16 +331,9 @@ public class Board {
 		System.out.println("Player to move: " + playerToMove);
 	}
 	
-	public Position algNotToPosition(String algNot) {
-		int row = -1;
-		int col = -1;
-		for (int i = 0; i < algNot.length(); i++) {
-			if ("abcdefgh".indexOf(algNot.charAt(i)) != -1) {
-				row = 8 - Character.getNumericValue(algNot.charAt(i + 1));
-				col = "abcdefgh".indexOf(algNot.charAt(i));
-			}
-		}
-		
+	public static Position algNotToPosition(String algNot) {
+		int row = 8 - Character.getNumericValue(algNot.charAt(algNot.length() - 1));
+		int col = "abcdefgh".indexOf(algNot.charAt(algNot.length() - 2));
 		return new Position(row, col);
 	}
 	

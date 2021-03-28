@@ -2,7 +2,6 @@ package pieces;
 
 import java.util.Arrays;
 import java.util.List;
-import pieces.*;
 import board.Board;
 import utils.*;
 
