@@ -59,4 +59,8 @@ public class Game {
 	private void move(String algNot) {
 		board.move(algNot);
 	}
+	
+	public Board getBoard() {
+		return board;
+	}
 }

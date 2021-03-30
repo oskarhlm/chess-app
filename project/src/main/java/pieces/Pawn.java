@@ -3,12 +3,19 @@ package pieces;
 import java.util.List;
 
 import board.Board;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import utils.*;
 
 public class Pawn extends Piece {
 	
 	public Pawn(Position position, Color color) {
 		super(position, color, 'p');
+		
+		String imagePath = String.format("/piece_sprites/%s_pawn_png_128px.png", colorPrefix);
+		this.image = new ImageView(new Image(getClass().getResourceAsStream(imagePath), squareSize*0.8, squareSize*0.8, true, true));
+		image.relocate(pieceX, pieceY);
+		mouseEventHandler(image);
 	}
 	
 	@Override
@@ -28,6 +35,11 @@ public class Pawn extends Piece {
 		if (Math.abs(oldPosition.row - newPosition.row) == 2) {
 			board.setEnPassentPiece(this);
 		} else board.setEnPassentPiece(null);
+	}
+	
+	@Override
+	public ImageView getImage() {
+		return image;
 	}
 	
 }

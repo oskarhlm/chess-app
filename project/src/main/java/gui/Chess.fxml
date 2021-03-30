@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="ap_main" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.Controller">
+	
+</AnchorPane>
+

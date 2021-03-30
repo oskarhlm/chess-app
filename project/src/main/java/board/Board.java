@@ -24,6 +24,9 @@ public class Board {
 	}
 	
 	public Board(GameType gameType) {
+		/* Creates a new board with specified setup. All types other than "CLASSIC_SETUP"
+		 * are solely used in development for testing purposes */
+		
 		switch (gameType) {
 			case CLASSIC_SETUP: 
 				newGame();
@@ -46,6 +49,9 @@ public class Board {
 	}
 	
 	public Board(Board board) {
+		/* Used to make a copy of a board. Needed when looking at potential positions, for instance when 
+		 * deciding if a certain move puts your king in check, and thus needs to be disallowed */
+		
 		initializeSquares();
 		
 		for (int i = 0; i < 8; i++) {
@@ -79,16 +85,19 @@ public class Board {
 	private void initializeSquares() {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
-				squares[i][j] = new Square();
+				squares[i][j] = new Square(i, j);
 			}
 		}
 	}
 	
-	private void addPiecesToPlayer(Player whitePlayer, Player blackPlayer) {
+	private void addPiecesToBoardAndPlayer(Player whitePlayer, Player blackPlayer) {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				IPiece piece = this.getPiece(new Position(i, j));
+				
 				if (piece != null) {
+					piece.setBoard(this);
+
 					if (piece.getColor() == Color.WHITE) {
 						whitePlayer.addPiece(piece);
 						piece.setPlayer(whitePlayer);
@@ -102,6 +111,8 @@ public class Board {
 	}
 	
 	private void newGame() {
+		/* Initalizes a board with the normal piece setup */
+		
 		initializeSquares();
 		
 		// Black pieces
@@ -132,7 +143,7 @@ public class Board {
 			squares[6][i].placePiece(new Pawn(new Position(6, i), Color.WHITE));
 		}
 		
-		addPiecesToPlayer(whitePlayer, blackPlayer);
+		addPiecesToBoardAndPlayer(whitePlayer, blackPlayer);
 		playerToMove = whitePlayer;
 	}
 	
@@ -147,7 +158,7 @@ public class Board {
 		squares[1][0].placePiece(new Rook(new Position(1, 0), Color.WHITE));
 		squares[7][1].placePiece(new King(new Position(7, 1), Color.WHITE));
 
-		addPiecesToPlayer(whitePlayer, blackPlayer);	
+		addPiecesToBoardAndPlayer(whitePlayer, blackPlayer);	
 		playerToMove = blackPlayer;
 		getWhiteKing().setHasMoved(true);
 		getBlackKing().setHasMoved(true);
@@ -163,7 +174,7 @@ public class Board {
 		squares[2][5].placePiece(new King(new Position(2, 5), Color.BLACK));
 		squares[6][5].placePiece(new Pawn(new Position(6, 5), Color.BLACK));
 		
-		addPiecesToPlayer(whitePlayer, blackPlayer);
+		addPiecesToBoardAndPlayer(whitePlayer, blackPlayer);
 		playerToMove = whitePlayer;
 		getWhiteKing().setHasMoved(true);
 		getBlackKing().setHasMoved(true);
@@ -181,7 +192,7 @@ public class Board {
 		squares[0][0].placePiece(new King(new Position(0, 0), Color.BLACK));
 		squares[0][2].placePiece(new Knight(new Position(0, 2), Color.BLACK));
 		
-		addPiecesToPlayer(whitePlayer, blackPlayer);
+		addPiecesToBoardAndPlayer(whitePlayer, blackPlayer);
 		playerToMove = whitePlayer;
 		getWhiteKing().setHasMoved(true);
 		getBlackKing().setHasMoved(true);
@@ -200,7 +211,7 @@ public class Board {
 		// Black pieces
 		squares[0][0].placePiece(new King(new Position(0, 0), Color.BLACK));
 		
-		addPiecesToPlayer(whitePlayer, blackPlayer);
+		addPiecesToBoardAndPlayer(whitePlayer, blackPlayer);
 		playerToMove = whitePlayer;
 		getWhiteKing().setHasMoved(true);
 		getBlackKing().setHasMoved(true);
@@ -221,12 +232,16 @@ public class Board {
 	public void move(IPiece piece, Position position) {
 		piece.move(this, position);
 		System.out.println("\n" + this.toString());
-	}
+	}	
 	
 	public void move(String algNot) {
+		/* Takes user input in the form of algebraic chess notation, analyses it
+		 * and moves the specified piece according to the input if it is a legal move */
+		
 		Position newPosition = algNotToPosition(algNot);
 		char pieceLetter;
 		
+		// Check what piece is trying to move
 		if ("RNBQK".indexOf(algNot.charAt(0)) != -1) {
 			pieceLetter = algNot.charAt(0);
 		} else if (algNot.equals("O-O") || algNot.equals("O-O-O")) {
@@ -270,26 +285,12 @@ public class Board {
 		for (IPiece piece : sameColoredPieces) {
 			Position piecePos = piece.getPosition();
 			
-			if (piece instanceof Knight) {
-				System.out.println(piecePos.col + "=?=" + pieceCol);
-				System.out.println(piece.getLegalMoves(this).contains(newPosition) + ", " + newPosition);
-				System.out.println(pieceLetter == piece.getPieceLetter());
-				System.out.println(piecePos.col == pieceCol && pieceRow == -1);
-			}
-			
-			if (piecePos.col == pieceCol && piecePos.row == -1) {
-				System.out.println(piece);
-				System.out.println(piece.getPosition());
-			}
-			
 			if (piece.getLegalMoves(this).contains(newPosition) && pieceLetter == piece.getPieceLetter()
 					&& ((pieceRow == -1 && pieceCol == -1) 
 					|| (piecePos.row == pieceRow && pieceCol == -1) 
 					|| (piecePos.col == pieceCol && pieceRow == -1)
 					|| (piecePos.row == pieceRow && piecePos.col == pieceCol)
 					)) {
-				
-				System.out.println("hei!");
 				
 				Position oldPosition = piece.getPosition();
 				piece.move(this, newPosition);
@@ -300,7 +301,6 @@ public class Board {
 					int rookRow = (piece.getColor() == Color.WHITE) ? 7 : 0;
 					int rookColJump = (newPosition.col - oldPosition.col < 0) ? 3 : -2;
 					IPiece rook = this.getPiece(new Position(rookRow, rookCol));
-					System.out.println(rook);
 					Position oldRookPos = new Position(rookRow, rookCol);
 					Position newRookPos = new Position(rookRow, rookCol + rookColJump);
 					rook.setPosition(newRookPos);
@@ -332,6 +332,8 @@ public class Board {
 	}
 	
 	public static Position algNotToPosition(String algNot) {
+		/* Extracts a destination based on algebraic input */
+		
 		int row = 8 - Character.getNumericValue(algNot.charAt(algNot.length() - 1));
 		int col = "abcdefgh".indexOf(algNot.charAt(algNot.length() - 2));
 		return new Position(row, col);

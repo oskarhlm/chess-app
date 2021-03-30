@@ -3,6 +3,7 @@ package pieces;
 import java.util.List;
 
 import board.Board;
+import javafx.scene.image.ImageView;
 import player.Player;
 import utils.*;
 
@@ -18,4 +19,6 @@ public interface IPiece {
 	char getPieceLetter();
 	Player getPlayer();
 	void setPlayer(Player player);
+	ImageView getImage();
+	void setBoard(Board board);
 }
