@@ -32,6 +32,8 @@ public class GameController implements Initializable  {
 	Game game;
 	ChessBoardGUI boardGUI;
 	String fileName;
+	boolean save;
+	boolean dontSave;
 	
 	public GameController() {
 		boardGUI = new ChessBoardGUI();
@@ -48,17 +50,22 @@ public class GameController implements Initializable  {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		gamePane.getChildren().add(boardGUI.getBoard());
 		game = boardGUI.getGame();
+		game.setGameState(game.getGameState());
 	}
 	
 	public void handleExitButtonClicked() throws Exception {
 		if (fileName == null) {
 			displaySaveBox();
+		} else {
+			save = true;
 		}
 		
-		SaveAndLoadHandler.save(game, fileName);
-		Parent root = FXMLLoader.load(getClass().getResource("Menu.fxml"));
-		Stage window = (Stage) exitButton.getScene().getWindow();
-		window.setScene(new Scene(root));
+		if (save || dontSave) {
+			if (save) SaveAndLoadHandler.save(game, fileName);
+			Parent root = FXMLLoader.load(getClass().getResource("Menu.fxml"));
+			Stage window = (Stage) exitButton.getScene().getWindow();
+			window.setScene(new Scene(root));
+		}
 	}
 	
 	private void displaySaveBox() {
@@ -70,16 +77,27 @@ public class GameController implements Initializable  {
 		Label label = new Label("Insert save name:");
 		TextField saveNameInput = new TextField();
 		Button saveButton = new Button("Save");
+		Button dontSaveButton = new Button("Don't save");
+		HBox buttons = new HBox();
+		buttons.setAlignment(Pos.CENTER);
+		buttons.setSpacing(10);
+		buttons.getChildren().addAll(saveButton, dontSaveButton);
 		
 		saveButton.setOnAction(e -> {
 			fileName = saveNameInput.getText();
+			save = true;
+			window.close();
+		});
+		
+		dontSaveButton.setOnAction(e-> {
+			dontSave = true;
 			window.close();
 		});
 		
 		VBox layout = new VBox();
 		layout.setSpacing(10);
 		layout.setPadding(new Insets(20));
-		layout.getChildren().addAll(label, saveNameInput, saveButton);
+		layout.getChildren().addAll(label, saveNameInput, buttons);
 		layout.setAlignment(Pos.CENTER);
 		
 		Scene scene = new Scene(layout);
@@ -186,7 +204,7 @@ public class GameController implements Initializable  {
 				break;
 		}
 		
-		if (gameState != GameState.ONGOING) {
+		if (gameState != GameState.ONGOING && gameState != GameState.NOT_STARTED) {
 			declareWinnerButton.setDisable(true);
 			drawButton.setDisable(true);
 		}

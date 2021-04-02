@@ -12,8 +12,10 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
@@ -55,7 +57,20 @@ public class LoadMenuController implements Initializable {
 	        }
 	    });
 		
-		container.getChildren().add(gamesList);
+		Button backToMenuButton = new Button("Back to menu"); 
+		
+		backToMenuButton.setOnAction(e -> {
+			Parent root;
+			try {
+				root = FXMLLoader.load(getClass().getResource("Menu.fxml"));
+				Stage window = (Stage) backToMenuButton.getScene().getWindow();
+				window.setScene(new Scene(root));
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		});
+		
+		container.getChildren().addAll(gamesList, backToMenuButton);
 	}
 	
 	

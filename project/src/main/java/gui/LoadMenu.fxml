@@ -4,9 +4,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LoadMenuController">
-	<VBox fx:id="container" alignment="CENTER">
-		<Label text="Select the game you want load:" minHeight="30" />
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LoadMenuController" style="-fx-background-color: LIGHTYELLOW">
+	<VBox fx:id="container" alignment="CENTER" spacing="10" style="-fx-padding: 10 5 10 5;">
+		<Label text="Select the game you want load:" />
 	</VBox>
 </AnchorPane>
 

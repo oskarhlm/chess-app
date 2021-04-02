@@ -29,11 +29,10 @@ public class Game implements Serializable {
 	private ChessBoardGUI boardGUI;
 	private GameState gameState;
 	
-	public Game(Board board) {
+	public Game(Board board, GameState gameState) {
 		this.board = board;
 		board.setGame(this);
-		this.gameState = GameState.ONGOING;
-		updateGameState();
+		this.gameState = gameState;
 		System.out.println(board);
 	}
 	
@@ -111,6 +110,9 @@ public class Game implements Serializable {
 	
 	public void setGameState(GameState gameState) {
 		this.gameState = gameState;
-		boardGUI.getGameController().gameStateChanged(gameState);
+		
+		if (boardGUI != null) {
+			boardGUI.getGameController().gameStateChanged(gameState);
+		}
 	}
 }

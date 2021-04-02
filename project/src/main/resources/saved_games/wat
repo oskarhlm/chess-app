@@ -1,8 +1,9 @@
 white to move
-wpc4
-wpd4
+WHITE_VICTORIOUS
 wpa2
 wpb2
+wpc2
+wpd2
 wpe2
 wpf2
 wpg2
@@ -26,8 +27,8 @@ bRh8
 bpa7
 bpb7
 bpc7
+bpd7
+bpe7
 bpf7
 bpg7
 bph7
-bpe6
-bpd5

@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/15.0.1" fx:controller="gui.MenuController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/15.0.1" fx:controller="gui.MenuController" style="-fx-background-color: LIGHTYELLOW">
    <children>
       <HBox prefHeight="100.0" prefWidth="300.0">
          <children>
