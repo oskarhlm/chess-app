@@ -22,4 +22,5 @@ public interface IPiece {
 	ImageView getImage();
 	void setBoard(Board board);
 	void relocatePiece(Position position);
+	void setImage();
 }

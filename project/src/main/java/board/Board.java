@@ -102,6 +102,7 @@ public class Board {
 				
 				if (piece != null) {
 					piece.setBoard(this);
+					piece.setImage();
 
 					if (piece.getColor() == Color.WHITE) {
 						whitePlayer.addPiece(piece);
@@ -356,7 +357,7 @@ public class Board {
 				
 				Position oldPosition = piece.getPosition();
 				move(piece, newPosition);
-				piece.relocatePiece(newPosition);
+				if (piece.getImage() != null) piece.relocatePiece(newPosition);
 				
 				// Castling
 				if (piece instanceof King && Math.abs(newPosition.col - oldPosition.col) == 2) {
