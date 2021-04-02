@@ -1,7 +1,6 @@
 package board;
 
-import gui.ChessApp;
-import gui.ChessBoard;
+import gui.ChessBoardGUI;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import pieces.*;
@@ -11,7 +10,8 @@ public class Square extends Rectangle {
 	
 	private IPiece piece;
 	private Position position;
-	private int SIZE = ChessBoard.SQUARE_SIZE;
+	private int SIZE = ChessBoardGUI.SQUARE_SIZE;
+	private Board board;
 	
 	public Square(int row, int col) {
 		this.position = new Position(row, col);
@@ -37,6 +37,7 @@ public class Square extends Rectangle {
 	}
 	
 	public void capturePieceOnSquare() {
+		board.getGame().getChessBoardGUI().getPieceGroup().getChildren().remove(piece.getImage());
 		piece.getPlayer().getPieces().remove(piece);
 	}
 	
@@ -47,5 +48,13 @@ public class Square extends Rectangle {
 	
 	public Position getPosition() {
 		return position;
+	}
+	
+	public void setBoard(Board board) {
+		this.board = board;
+	}
+	
+	public Board getBoard() {
+		return this.board;
 	}
 }

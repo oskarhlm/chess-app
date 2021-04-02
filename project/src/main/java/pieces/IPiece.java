@@ -21,4 +21,5 @@ public interface IPiece {
 	void setPlayer(Player player);
 	ImageView getImage();
 	void setBoard(Board board);
+	void relocatePiece(Position position);
 }

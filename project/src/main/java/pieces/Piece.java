@@ -4,7 +4,7 @@ import java.util.List;
 
 import board.*;
 import gui.ChessApp;
-import gui.ChessBoard;
+import gui.ChessBoardGUI;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import player.Player;
@@ -19,7 +19,7 @@ abstract class Piece implements IPiece {
 	List<IPiece> attackingPieces;
 	final public char pieceLetter;
 	private Player player;
-	int squareSize = ChessBoard.SQUARE_SIZE;
+	int squareSize = ChessBoardGUI.SQUARE_SIZE;
 	double pieceX; 
 	double pieceY; 
 	ImageView image;
@@ -64,17 +64,28 @@ abstract class Piece implements IPiece {
 		image.setOnMouseReleased(e -> {
 			int newCol = (int) (e.getSceneX() / squareSize);
 			int newRow = (int) (e.getSceneY() / squareSize);
+			double newPieceX = squareSize * (newCol + 0.1);
+			double newPieceY = squareSize * (newRow + 0.1);
+			image.relocate(newPieceX, newPieceY);
 			
-			image.relocate(squareSize * (newCol + 0.1), squareSize * (newRow + 0.1));
+			if (!board.tryMove(this, new Position(newRow, newCol))) {
+				image.relocate(pieceX, pieceY);
+			} else {
+				pieceX = newPieceX;
+				pieceY = newPieceY;
+			}
 		});
+	}
+	
+	public void relocatePiece(Position position) {
+		pieceX = squareSize * (position.col + 0.1);
+		pieceY = squareSize * (position.row + 0.1);
+		image.relocate(pieceX, pieceY);
 	}
 	
 	public void move(Board board, Position newPosition) throws IllegalArgumentException {
 		if (! this.getLegalMoves(board).contains(newPosition)) {
-//			throw new IllegalArgumentException(String.format("Error board:\n%s\nIllegal move! %s", board, newPosition));
-			System.out.println("Illegal move!");
-			System.out.println(newPosition);
-			image.relocate(pieceX, pieceY);
+			throw new IllegalArgumentException(String.format("Error board:\n%s\nIllegal move! %s", board, newPosition));
 		}
 		
 		board.getSquare(position).removePiece();

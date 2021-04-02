@@ -3,7 +3,6 @@ package pieces;
 import java.util.List;
 
 import board.Board;
-import gui.ChessApp;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utils.*;

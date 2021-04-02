@@ -19,9 +19,7 @@ public class ChessApp extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("Chess");
-//		Parent root = FXMLLoader.load(getClass().getResource("Menu.fxml"));
-		Pane root = new ChessBoard().getBoard();
-		
+		Parent root = FXMLLoader.load(getClass().getResource("Menu.fxml"));
 		Scene scene = new Scene(root);
 		primaryStage.setScene(scene);
 		primaryStage.show();

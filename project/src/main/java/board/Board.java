@@ -6,9 +6,13 @@ import player.*;
 
 import java.util.*;
 
+import game.Game;
+import game.Game.GameState;
+
 
 public class Board {
 	
+	private Game game;
 	Square[][] squares = new Square[8][8];
 	private Pawn enPassentPiece;
 	private Player whitePlayer = new Player(Color.WHITE);
@@ -86,6 +90,7 @@ public class Board {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				squares[i][j] = new Square(i, j);
+				squares[i][j].setBoard(this);
 			}
 		}
 	}
@@ -175,7 +180,7 @@ public class Board {
 		squares[6][5].placePiece(new Pawn(new Position(6, 5), Color.BLACK));
 		
 		addPiecesToBoardAndPlayer(whitePlayer, blackPlayer);
-		playerToMove = whitePlayer;
+		playerToMove = blackPlayer;
 		getWhiteKing().setHasMoved(true);
 		getBlackKing().setHasMoved(true);
 	}
@@ -231,8 +236,65 @@ public class Board {
 	
 	public void move(IPiece piece, Position position) {
 		piece.move(this, position);
-		System.out.println("\n" + this.toString());
-	}	
+		playerToMove = (playerToMove == whitePlayer) ? blackPlayer : whitePlayer;
+		
+		if (this.getGame().getGameState() == GameState.NOT_STARTED) {
+			this.getGame().setGameState(GameState.ONGOING);
+		}
+		
+		this.getGame().updateGameState();
+		System.out.println(this.getGame().getGameState());
+	}
+	
+	public boolean tryMove(IPiece piece, Position newPosition) {
+		Position oldPosition = piece.getPosition();
+		Color pieceColor = (playerToMove == whitePlayer) ? Color.WHITE : Color.BLACK;
+		boolean promotion = false;
+		
+		if (piece.getColor() == playerToMove.getColor() && piece.getLegalMoves(this).contains(newPosition)) {
+			move(piece, newPosition);
+			
+			// Castling
+			if (piece instanceof King && Math.abs(newPosition.col - oldPosition.col) == 2) {
+				System.out.println("ou");
+				int rookCol = (newPosition.col - oldPosition.col < 0) ? 0 : 7;
+				int rookRow = (piece.getColor() == Color.WHITE) ? 7 : 0;
+				int rookColJump = (newPosition.col - oldPosition.col < 0) ? 3 : -2;
+				IPiece rook = this.getPiece(new Position(rookRow, rookCol));
+				Position oldRookPos = new Position(rookRow, rookCol);
+				Position newRookPos = new Position(rookRow, rookCol + rookColJump);
+				rook.setPosition(newRookPos);
+				this.getSquare(oldRookPos).removePiece();
+				this.getSquare(newRookPos).placePiece(rook);
+				rook.relocatePiece(newRookPos);
+			}
+			
+			// Promotion
+			int promotionRow = (pieceColor == Color.WHITE) ? 0 : 7;
+			
+			if (piece instanceof Pawn && newPosition.row == promotionRow) {
+				promotion = true;
+			}
+			
+			if (promotion) {
+				this.getSquare(newPosition).capturePieceOnSquare();
+				Queen newQueen = new Queen(new Position(newPosition.row, newPosition.col), pieceColor);
+				newQueen.setBoard(this);
+				newQueen.setPlayer(playerToMove);
+				Player player = (pieceColor == Color.WHITE) ? whitePlayer : blackPlayer;
+				player.addPiece(newQueen);
+				Square newSquare = squares[newPosition.row][newPosition.col];
+				newSquare.placePiece(newQueen);
+				this.getGame().getChessBoardGUI().getPieceGroup().getChildren().add(newQueen.getImage());
+			}
+			
+			System.out.println("\n" + this.toString());
+			
+			return true;
+		}
+			
+		return false; 
+	}
 	
 	public void move(String algNot) {
 		/* Takes user input in the form of algebraic chess notation, analyses it
@@ -293,7 +355,8 @@ public class Board {
 					)) {
 				
 				Position oldPosition = piece.getPosition();
-				piece.move(this, newPosition);
+				move(piece, newPosition);
+				piece.relocatePiece(newPosition);
 				
 				// Castling
 				if (piece instanceof King && Math.abs(newPosition.col - oldPosition.col) == 2) {
@@ -389,6 +452,14 @@ public class Board {
 	
 	public void setPlayerToMove(Player playerToMove) {
 		this.playerToMove = playerToMove;
+	}
+	
+	public void setGame(Game game) {
+		this.game = game;
+	}
+	
+	public Game getGame() {
+		return game;
 	}
 	
 	
