@@ -26,8 +26,8 @@ public class MenuController {
 	public void loadButtonClicked() throws Exception {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
 		Game newGame = new Game(GameType.CLASSIC_SETUP);
-		newGame.getBoard().move("e4");
 		loader.setController(new GameController(newGame));
+		newGame.getBoard().move("e4");
 		Parent root = loader.load();
 		Stage window = (Stage) newGameButton.getScene().getWindow();
 		window.setScene(new Scene(root));

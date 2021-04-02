@@ -6,14 +6,21 @@ import gui.ChessBoardGUI;
 import player.*;
 import utils.Color;
 import pieces.*;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.*;
 
-public class Game {
+public class Game implements Serializable {
 	
 	public enum GameState {
 		NOT_STARTED,
 		ONGOING,
-		DRAWN,
+		DRAW_BY_AGREEMENT,
+		STALE_MATE,
 		WHITE_VICTORIOUS,
 		BLACK_VICTORIOUS
 	}
@@ -29,7 +36,7 @@ public class Game {
 		System.out.println(board.toString());
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException, IOException {
 		Game game = new Game(GameType.CLASSIC_SETUP);
 		
 		Scanner sc = new Scanner(System.in);
@@ -37,9 +44,13 @@ public class Game {
 		
 		while (!moveInput.equals("quit")) {
 			game.move(moveInput);
-//			if (game.hasEnded()) break;
+			game.updateGameState();
 			moveInput = sc.nextLine();
 		}
+		
+		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("game.txt"));
+		out.writeObject(game);
+		out.close();
 
 		sc.close();
 	}
@@ -60,12 +71,13 @@ public class Game {
 		if (King.isCheck(board, playerKing)) {
 			if (!hasLegalPieceMoves) {
 				System.out.println("Check mate!");
-				gameState = (playerToMove.getColor() == Color.WHITE)
+				GameState newGameState = (playerToMove.getColor() == Color.WHITE)
 						? GameState.BLACK_VICTORIOUS : GameState.WHITE_VICTORIOUS;
+				setGameState(newGameState);
 			} else System.out.println("Check!");
 		} else if (!hasLegalPieceMoves) {
 			System.out.println("Stale mate!");
-			gameState = GameState.DRAWN;
+			setGameState(GameState.STALE_MATE);
 		} 
 	}
 	
@@ -91,5 +103,6 @@ public class Game {
 	
 	public void setGameState(GameState gameState) {
 		this.gameState = gameState;
+		boardGUI.getGameController().gameStateChanged(gameState);
 	}
 }

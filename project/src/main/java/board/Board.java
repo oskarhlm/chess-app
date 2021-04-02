@@ -248,6 +248,10 @@ public class Board {
 	}
 	
 	public boolean tryMove(IPiece piece, Position newPosition) {
+		if (getGame().getGameState() != GameState.NOT_STARTED && getGame().getGameState() != GameState.ONGOING) {
+			return false;
+		}
+		
 		Position oldPosition = piece.getPosition();
 		Color pieceColor = (playerToMove == whitePlayer) ? Color.WHITE : Color.BLACK;
 		boolean promotion = false;
@@ -378,8 +382,6 @@ public class Board {
 				if (piece instanceof Pawn && newPosition.row == promotionRow) {
 					promotion = true;
 				}
-				
-				playerToMove = (playerToMove == whitePlayer) ? blackPlayer : whitePlayer;
 			} 
 		}
 		

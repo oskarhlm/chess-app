@@ -3,6 +3,7 @@ package gui;
 import board.Square;
 import board.Board.GameType;
 import game.Game;
+import game.Game.GameState;
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 
@@ -15,6 +16,7 @@ public class ChessBoardGUI {
 	private Group pieceGroup = new Group();
 	
 	Game game;
+	GameController controller;
 	
 	public ChessBoardGUI() {
 		initialize(new Game(GameType.CLASSIC_SETUP));
@@ -29,7 +31,9 @@ public class ChessBoardGUI {
 		board.setPrefSize(SQUARE_SIZE * 8, SQUARE_SIZE * 8);
 		board.getChildren().addAll(squareGroup, pieceGroup);
 		
+		this.game = game;
 		game.setChessBoardGUI(this);
+		
 		Square[][] squares = game.getBoard().getSquares();
 		
 		for (Square[] row : squares) {
@@ -37,7 +41,6 @@ public class ChessBoardGUI {
 				squareGroup.getChildren().add(square);
 				if (square.getPiece() != null) {
 					pieceGroup.getChildren().add(square.getPiece().getImage());
-					System.out.println(square.getPosition() + ", " + square.getPiece().getPosition());
 				}
 			}
 		}
@@ -55,4 +58,11 @@ public class ChessBoardGUI {
 		return game;
 	}
 	
+	public GameController getGameController() {
+		return controller;
+	}
+	
+	public void setController(GameController controller) {
+		this.controller = controller;
+	}
 }
