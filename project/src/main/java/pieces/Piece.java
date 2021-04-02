@@ -115,6 +115,10 @@ abstract class Piece implements IPiece {
 		return color;
 	}
 	
+	public String getColorPrefix() {
+		return colorPrefix;
+	}
+	
 	public char getPieceLetter() {
 		return pieceLetter;
 	}

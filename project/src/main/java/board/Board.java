@@ -86,6 +86,24 @@ public class Board {
 		}
 	}
 	
+	public Board(List<IPiece> pieces, Color playerToMoveColor) {
+		initializeSquares();
+		
+		for (IPiece piece : pieces) {
+			Color color = (piece.getColor() == Color.WHITE) ? Color.WHITE : Color.BLACK;
+			Position pos = piece.getPosition();
+			if (piece instanceof Rook) squares[pos.row][pos.col].placePiece(new Rook(pos, color));
+			else if (piece instanceof Knight) squares[pos.row][pos.col].placePiece(new Knight(pos, color));
+			else if (piece instanceof Bishop) squares[pos.row][pos.col].placePiece(new Bishop(pos, color));
+			else if (piece instanceof Queen) squares[pos.row][pos.col].placePiece(new Queen(pos, color));
+			else if (piece instanceof King) squares[pos.row][pos.col].placePiece(new King(pos, color));
+			else if (piece instanceof Pawn) squares[pos.row][pos.col].placePiece(new Pawn(pos, color));
+		}
+		
+		addPiecesToBoardAndPlayer(whitePlayer, blackPlayer);
+		this.playerToMove = (playerToMoveColor == Color.WHITE) ? whitePlayer : blackPlayer;
+	}
+	
 	private void initializeSquares() {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {

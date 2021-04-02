@@ -29,11 +29,19 @@ public class Game implements Serializable {
 	private ChessBoardGUI boardGUI;
 	private GameState gameState;
 	
+	public Game(Board board) {
+		this.board = board;
+		board.setGame(this);
+		this.gameState = GameState.ONGOING;
+		updateGameState();
+		System.out.println(board);
+	}
+	
 	public Game(GameType gameType) {
 		board = new Board(gameType);
 		board.setGame(this);
 		this.gameState = GameState.NOT_STARTED;
-		System.out.println(board.toString());
+		System.out.println(board);
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {

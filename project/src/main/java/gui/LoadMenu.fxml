@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LoadMenuController">
+	<VBox fx:id="container" alignment="CENTER">
+		<Label text="Select the game you want load:" minHeight="30" />
+	</VBox>
+</AnchorPane>
+

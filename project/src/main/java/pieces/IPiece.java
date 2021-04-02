@@ -10,6 +10,7 @@ import utils.*;
 public interface IPiece {
 	void move(Board board, Position newPosition);
 	Color getColor();
+	String getColorPrefix();
 	Position getPosition();
 	void setPosition(Position position);
 	boolean hasMoved();

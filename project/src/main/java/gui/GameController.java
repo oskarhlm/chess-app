@@ -8,11 +8,13 @@ import game.Game.GameState;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -29,15 +31,17 @@ public class GameController implements Initializable  {
 	
 	Game game;
 	ChessBoardGUI boardGUI;
+	String fileName;
 	
 	public GameController() {
 		boardGUI = new ChessBoardGUI();
 		boardGUI.setController(this);
 	}
 	
-	public GameController(Game game) {
+	public GameController(Game game, String fileName) {
 		boardGUI = new ChessBoardGUI(game);
 		boardGUI.setController(this);
+		this.fileName = fileName;
 	}
 	
 	@Override
@@ -47,9 +51,40 @@ public class GameController implements Initializable  {
 	}
 	
 	public void handleExitButtonClicked() throws Exception {
+		if (fileName == null) {
+			displaySaveBox();
+		}
+		
+		SaveAndLoadHandler.save(game, fileName);
 		Parent root = FXMLLoader.load(getClass().getResource("Menu.fxml"));
 		Stage window = (Stage) exitButton.getScene().getWindow();
 		window.setScene(new Scene(root));
+	}
+	
+	private void displaySaveBox() {
+		Stage window = new Stage();
+		window.initModality(Modality.APPLICATION_MODAL);
+		window.setTitle("Save game");
+		window.setMinWidth(250);
+		
+		Label label = new Label("Insert save name:");
+		TextField saveNameInput = new TextField();
+		Button saveButton = new Button("Save");
+		
+		saveButton.setOnAction(e -> {
+			fileName = saveNameInput.getText();
+			window.close();
+		});
+		
+		VBox layout = new VBox();
+		layout.setSpacing(10);
+		layout.setPadding(new Insets(20));
+		layout.getChildren().addAll(label, saveNameInput, saveButton);
+		layout.setAlignment(Pos.CENTER);
+		
+		Scene scene = new Scene(layout);
+		window.setScene(scene);
+		window.showAndWait();
 	}
 	
 	public void handleDeclareWinnerButtonClicked() {
@@ -155,5 +190,9 @@ public class GameController implements Initializable  {
 			declareWinnerButton.setDisable(true);
 			drawButton.setDisable(true);
 		}
+	}
+	
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 }

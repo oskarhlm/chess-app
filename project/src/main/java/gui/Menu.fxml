@@ -23,7 +23,7 @@
       <VBox alignment="CENTER" layoutY="155.0" prefHeight="400.0" prefWidth="300.0" spacing="20.0" AnchorPane.topAnchor="0.0">
          <children>
             <Button fx:id="newGameButton" alignment="CENTER" mnemonicParsing="false" text="New game" onAction="#newGameButtonClicked" />
-            <Button mnemonicParsing="false" text="Load game" onAction="#loadButtonClicked" />
+            <Button fx:id="loadMenuButton" mnemonicParsing="false" text="Load game" onAction="#loadButtonClicked" />
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
