@@ -12,7 +12,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,6 +19,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import utils.ISaveAndLoadHandler;
+import utils.SaveAndLoadHandler;
 
 public class LoadMenuController implements Initializable {
 	
@@ -27,6 +28,8 @@ public class LoadMenuController implements Initializable {
 	@FXML ListView<String> gamesList;
 	
 	ObservableList<String> fileNames = FXCollections.observableArrayList();
+	
+	ISaveAndLoadHandler saveAndLoadHandler = new SaveAndLoadHandler();
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -46,7 +49,7 @@ public class LoadMenuController implements Initializable {
 	        	try {
 	        		FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
 		        	String fileName = gamesList.getSelectionModel().getSelectedItem();
-		    		Game game = SaveAndLoadHandler.load(fileName);
+		    		Game game = saveAndLoadHandler.load(fileName);
 		    		loader.setController(new GameController(game, fileName));
 		    		Parent root = loader.load();
 		    		Stage window = (Stage) gamesList.getScene().getWindow();
@@ -57,7 +60,7 @@ public class LoadMenuController implements Initializable {
 	        }
 	    });
 		
-		Button backToMenuButton = new Button("Back to menu"); 
+		Button backToMenuButton = new Button("Back to main menu"); 
 		
 		backToMenuButton.setOnAction(e -> {
 			Parent root;

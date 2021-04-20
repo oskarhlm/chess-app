@@ -12,7 +12,7 @@
 			<Button fx:id="declareWinnerButton" text="Declare winner" onAction="#handleDeclareWinnerButtonClicked" />
 			<Button fx:id="drawButton" text="Agree to draw" onAction="#handleDrawButtonClicked" />
 			<Label fx:id="gameInfoLabel" />
-			<Button fx:id="exitButton" text="Exit" onAction="#handleExitButtonClicked" />
+			<Button fx:id="exitButton" text="Exit to main menu" onAction="#handleExitButtonClicked" />
 		</VBox>
 	</HBox>
 </AnchorPane>

@@ -1,9 +1,9 @@
 package utils;
 
-public class Position {
+public final class Position {
 	
-	public final int row;
-	public final int col;
+	public int row;
+	public int col;
 	
 	public Position(int row, int col) {
 		this.row = row;
@@ -12,7 +12,6 @@ public class Position {
 	
 	@Override
 	public String toString() {
-//		return String.format("(row %s, col %s)", row, col);
 		String columnLetter = "abcdefgh";
 		return String.format("%s%s", columnLetter.charAt(col), 8 - row);
 	}

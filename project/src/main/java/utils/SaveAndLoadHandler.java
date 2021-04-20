@@ -1,4 +1,4 @@
-package gui;
+package utils;
 
 import board.Board;
 import game.Game;
@@ -10,17 +10,14 @@ import pieces.Knight;
 import pieces.Pawn;
 import pieces.Queen;
 import pieces.Rook;
-import utils.Color;
-import utils.Position;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
-public class SaveAndLoadHandler {
+public class SaveAndLoadHandler implements ISaveAndLoadHandler {
 	
-	public static void save(Game game, String fileName) throws IOException {
+	public void save(Game game, String fileName) throws IOException {
 		Board board = game.getBoard();
 		
 		String playerToMoveOutput = (game.getBoard().getPlayerToMove().getColor() == Color.WHITE) 
@@ -39,7 +36,7 @@ public class SaveAndLoadHandler {
 		}
 	}
 	
-	private static void saveToFile(String fileName, String text, boolean append) throws IOException {
+	private void saveToFile(String fileName, String text, boolean append) throws IOException {
 		File file = new File("src\\main\\resources\\saved_games\\" + fileName);
 		FileWriter fw = new FileWriter(file, append);
 		PrintWriter pw = new PrintWriter(fw);
@@ -47,7 +44,7 @@ public class SaveAndLoadHandler {
 		pw.close();
 	}
 	
-	public static Game load(String fileName) throws IOException {
+	public Game load(String fileName) throws IOException {
 		String path = "src\\main\\resources\\saved_games\\" + fileName;
 		String line = "";
 		
@@ -80,41 +77,26 @@ public class SaveAndLoadHandler {
 					gameState = GameState.BLACK_VICTORIOUS;
 					break;
 				default:
-					char colorPrefix = line.charAt(0);
-					Color pieceColor = (colorPrefix == 'w') ? Color.WHITE : Color.BLACK;
-					
-					char pieceLetter = line.charAt(1);
-					Position piecePosition = Board.algNotToPosition(line.substring(2));
-					
-					if (pieceLetter == 'R') pieces.add(new Rook(piecePosition, pieceColor));
-					else if (pieceLetter == 'N') pieces.add(new Knight(piecePosition, pieceColor));
-					else if (pieceLetter == 'B') pieces.add(new Bishop(piecePosition, pieceColor));
-					else if (pieceLetter == 'Q') pieces.add(new Queen(piecePosition, pieceColor));
-					else if (pieceLetter == 'K') pieces.add(new King(piecePosition, pieceColor));
-					else if (pieceLetter == 'p') pieces.add(new Pawn(piecePosition, pieceColor));
+					try {
+						char colorPrefix = line.charAt(0);
+						Color pieceColor = (colorPrefix == 'w') ? Color.WHITE : Color.BLACK;
+						
+						char pieceLetter = line.charAt(1);
+						Position piecePosition = Board.algNotToPosition(line.substring(2));
+						
+						if (pieceLetter == 'R') pieces.add(new Rook(piecePosition, pieceColor));
+						else if (pieceLetter == 'N') pieces.add(new Knight(piecePosition, pieceColor));
+						else if (pieceLetter == 'B') pieces.add(new Bishop(piecePosition, pieceColor));
+						else if (pieceLetter == 'Q') pieces.add(new Queen(piecePosition, pieceColor));
+						else if (pieceLetter == 'K') pieces.add(new King(piecePosition, pieceColor));
+						else if (pieceLetter == 'p') pieces.add(new Pawn(piecePosition, pieceColor));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 			}
-			
-			
-//			if (line.equals("white to move")) {
-//				playerToMoveColor = Color.WHITE;
-//			} else if (line.equals("black to move")) {
-//				playerToMoveColor = Color.BLACK;
-//			} else {
-//				char colorPrefix = line.charAt(0);
-//				Color pieceColor = (colorPrefix == 'w') ? Color.WHITE : Color.BLACK;
-//				
-//				char pieceLetter = line.charAt(1);
-//				Position piecePosition = Board.algNotToPosition(line.substring(2));
-//				
-//				if (pieceLetter == 'R') pieces.add(new Rook(piecePosition, pieceColor));
-//				else if (pieceLetter == 'N') pieces.add(new Knight(piecePosition, pieceColor));
-//				else if (pieceLetter == 'B') pieces.add(new Bishop(piecePosition, pieceColor));
-//				else if (pieceLetter == 'Q') pieces.add(new Queen(piecePosition, pieceColor));
-//				else if (pieceLetter == 'K') pieces.add(new King(piecePosition, pieceColor));
-//				else if (pieceLetter == 'p') pieces.add(new Pawn(piecePosition, pieceColor));
-//			}
 		}
 		
+		br.close();
 		Board board = new Board(pieces, playerToMoveColor);
 		
 		return new Game(board, gameState);

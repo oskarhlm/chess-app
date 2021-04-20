@@ -2,8 +2,6 @@ package gui;
 
 import java.io.IOException;
 
-import board.Board.GameType;
-import game.Game;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.*;

@@ -3,9 +3,7 @@ package pieces;
 import java.util.List;
 
 import board.*;
-import gui.ChessApp;
 import gui.ChessBoardGUI;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import player.Player;
 import utils.*;

@@ -8,13 +8,10 @@ import utils.Color;
 import pieces.*;
 
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.*;
 
-public class Game implements Serializable {
+public class Game {
 	
 	public enum GameState {
 		NOT_STARTED,
@@ -54,10 +51,6 @@ public class Game implements Serializable {
 			game.updateGameState();
 			moveInput = sc.nextLine();
 		}
-		
-		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("game.txt"));
-		out.writeObject(game);
-		out.close();
 
 		sc.close();
 	}
@@ -88,8 +81,9 @@ public class Game implements Serializable {
 		} 
 	}
 	
-	private void move(String algNot) {
+	public void move(String algNot) {
 		board.move(algNot);
+		updateGameState();
 	}
 	
 	public Board getBoard() {

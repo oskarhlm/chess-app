@@ -20,6 +20,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import utils.ISaveAndLoadHandler;
+import utils.SaveAndLoadHandler;
 
 public class GameController implements Initializable  {
 
@@ -34,6 +36,8 @@ public class GameController implements Initializable  {
 	String fileName;
 	boolean save;
 	boolean dontSave;
+	
+	ISaveAndLoadHandler saveAndLoadHandler = new SaveAndLoadHandler();
 	
 	public GameController() {
 		boardGUI = new ChessBoardGUI();
@@ -61,7 +65,7 @@ public class GameController implements Initializable  {
 		}
 		
 		if (save || dontSave) {
-			if (save) SaveAndLoadHandler.save(game, fileName);
+			if (save) saveAndLoadHandler.save(game, fileName);
 			Parent root = FXMLLoader.load(getClass().getResource("Menu.fxml"));
 			Stage window = (Stage) exitButton.getScene().getWindow();
 			window.setScene(new Scene(root));
@@ -74,7 +78,7 @@ public class GameController implements Initializable  {
 		window.setTitle("Save game");
 		window.setMinWidth(250);
 		
-		Label label = new Label("Insert save name:");
+		Label label = new Label("Type save name:");
 		TextField saveNameInput = new TextField();
 		Button saveButton = new Button("Save");
 		Button dontSaveButton = new Button("Don't save");

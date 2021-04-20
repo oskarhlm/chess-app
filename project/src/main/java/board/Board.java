@@ -87,6 +87,9 @@ public class Board {
 	}
 	
 	public Board(List<IPiece> pieces, Color playerToMoveColor) {
+		/* Constructor used when loading a saved game. A list of pieces is created based on information from
+		 * the save file, and a board is formed based on this list and knowledge of which player has the next move */
+		
 		initializeSquares();
 		
 		for (IPiece piece : pieces) {
@@ -114,6 +117,8 @@ public class Board {
 	}
 	
 	private void addPiecesToBoardAndPlayer(Player whitePlayer, Player blackPlayer) {
+		/* Connects each piece to its respective "owner" */
+		
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				IPiece piece = this.getPiece(new Position(i, j));
@@ -172,6 +177,8 @@ public class Board {
 	}
 	
 	private void stairCaseMate() {
+		/* Specific setup used for testing purposes */
+		
 		initializeSquares();
 		
 		// Black pieces
@@ -189,6 +196,8 @@ public class Board {
 	}
 	
 	private void promotionPosition() {
+		/* Specific setup used for testing purposes */
+		
 		initializeSquares();
 		
 		// White pieces
@@ -205,6 +214,8 @@ public class Board {
 	}
 	
 	private void staleMate() {
+		/* Specific setup used for testing purposes */
+		
 		initializeSquares();
 		
 		// White pieces
@@ -223,6 +234,8 @@ public class Board {
 	}
 	
 	private void notationTest() {
+		/* Specific setup used for testing purposes */
+		
 		initializeSquares();
 		
 		// White pieces
@@ -254,15 +267,14 @@ public class Board {
 	}
 	
 	public void move(IPiece piece, Position position) {
+		/**/
+		
 		piece.move(this, position);
 		playerToMove = (playerToMove == whitePlayer) ? blackPlayer : whitePlayer;
 		
-		if (this.getGame().getGameState() == GameState.NOT_STARTED) {
+		if (this.getGame() != null && this.getGame().getGameState() == GameState.NOT_STARTED) {
 			this.getGame().setGameState(GameState.ONGOING);
 		}
-		
-		this.getGame().updateGameState();
-		System.out.println(this.getGame().getGameState());
 	}
 	
 	public boolean tryMove(IPiece piece, Position newPosition) {
@@ -279,7 +291,6 @@ public class Board {
 			
 			// Castling
 			if (piece instanceof King && Math.abs(newPosition.col - oldPosition.col) == 2) {
-				System.out.println("ou");
 				int rookCol = (newPosition.col - oldPosition.col < 0) ? 0 : 7;
 				int rookRow = (piece.getColor() == Color.WHITE) ? 7 : 0;
 				int rookColJump = (newPosition.col - oldPosition.col < 0) ? 3 : -2;
@@ -303,6 +314,7 @@ public class Board {
 				this.getSquare(newPosition).capturePieceOnSquare();
 				Queen newQueen = new Queen(new Position(newPosition.row, newPosition.col), pieceColor);
 				newQueen.setBoard(this);
+				newQueen.setImage();
 				newQueen.setPlayer(playerToMove);
 				Player player = (pieceColor == Color.WHITE) ? whitePlayer : blackPlayer;
 				player.addPiece(newQueen);
@@ -311,7 +323,9 @@ public class Board {
 				this.getGame().getChessBoardGUI().getPieceGroup().getChildren().add(newQueen.getImage());
 			}
 			
+			this.getGame().updateGameState();
 			System.out.println("\n" + this.toString());
+			System.out.println(this.getGame().getGameState());
 			
 			return true;
 		}
@@ -321,7 +335,8 @@ public class Board {
 	
 	public void move(String algNot) {
 		/* Takes user input in the form of algebraic chess notation, analyses it
-		 * and moves the specified piece according to the input if it is a legal move */
+		 * and moves the specified piece according to the input if it is a legal move.
+		 * Not used in the final version, but needed for testing purposes */
 		
 		Position newPosition = algNotToPosition(algNot);
 		char pieceLetter;

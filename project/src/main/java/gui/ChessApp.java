@@ -2,17 +2,9 @@ package gui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import game.*;
-
-import board.*;
-import board.Board.GameType;
 
 public class ChessApp extends Application {
 
@@ -26,6 +18,6 @@ public class ChessApp extends Application {
 	}
 	
 	public static void main(String[] args) {
-			launch(args);
+		launch(args);
 	}
 }

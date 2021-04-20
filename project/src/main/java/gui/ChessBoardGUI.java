@@ -3,7 +3,6 @@ package gui;
 import board.Square;
 import board.Board.GameType;
 import game.Game;
-import game.Game.GameState;
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 

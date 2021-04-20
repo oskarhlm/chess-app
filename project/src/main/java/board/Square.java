@@ -37,7 +37,10 @@ public class Square extends Rectangle {
 	}
 	
 	public void capturePieceOnSquare() {
-		board.getGame().getChessBoardGUI().getPieceGroup().getChildren().remove(piece.getImage());
+		if (board.getGame() != null && board.getGame().getChessBoardGUI() != null) {
+			board.getGame().getChessBoardGUI().getPieceGroup().getChildren().remove(piece.getImage());
+		}
+		
 		piece.getPlayer().getPieces().remove(piece);
 	}
 	
