@@ -3,6 +3,8 @@ package pieces;
 import java.util.List;
 
 import board.*;
+import gui.ChessBoardGUI;
+import javafx.scene.image.ImageView;
 import player.Player;
 import utils.*;
 
@@ -15,12 +17,20 @@ abstract class Piece implements IPiece {
 	List<IPiece> attackingPieces;
 	final public char pieceLetter;
 	private Player player;
+	int squareSize = ChessBoardGUI.SQUARE_SIZE;
+	double pieceX; 
+	double pieceY; 
+	ImageView image;
+	Board board;
 	
 	Piece(Position position, Color color, char pieceLetter) {
 		this.position = position;
 		this.color = color;
 		colorPrefix = (color == Color.WHITE) ? "w" : "b";
 		this.pieceLetter = pieceLetter;
+		
+		pieceX = squareSize * (position.col + 0.1); 
+		pieceY = squareSize * (position.row + 0.1);
 		
 		if (this instanceof Pawn) {
 			if (color == Color.BLACK && position.row > 1) {
@@ -29,6 +39,7 @@ abstract class Piece implements IPiece {
 				hasMoved = true;
 			}
 		}
+		
 	}
 	
 	Piece(Piece piece) {
@@ -36,6 +47,38 @@ abstract class Piece implements IPiece {
 		this.color = piece.getColor();
 		colorPrefix = (piece.getColor() == Color.WHITE) ? "w" : "b";
 		this.pieceLetter = piece.getPieceLetter();
+	}
+	
+	void mouseEventHandler(ImageView image) {
+		image.setOnMousePressed(e -> {
+			// TODO: Show legal moves?
+			image.relocate(e.getSceneX() - squareSize*0.35, e.getSceneY() - squareSize*0.35);
+		});
+		
+		image.setOnMouseDragged(e -> {
+			image.relocate(e.getSceneX() - squareSize*0.35, e.getSceneY() - squareSize*0.35);
+		});
+		
+		image.setOnMouseReleased(e -> {
+			int newCol = (int) (e.getSceneX() / squareSize);
+			int newRow = (int) (e.getSceneY() / squareSize);
+			double newPieceX = squareSize * (newCol + 0.1);
+			double newPieceY = squareSize * (newRow + 0.1);
+			image.relocate(newPieceX, newPieceY);
+			
+			if (!board.tryMove(this, new Position(newRow, newCol))) {
+				image.relocate(pieceX, pieceY);
+			} else {
+				pieceX = newPieceX;
+				pieceY = newPieceY;
+			}
+		});
+	}
+	
+	public void relocatePiece(Position position) {
+		pieceX = squareSize * (position.col + 0.1);
+		pieceY = squareSize * (position.row + 0.1);
+		image.relocate(pieceX, pieceY);
 	}
 	
 	public void move(Board board, Position newPosition) throws IllegalArgumentException {
@@ -70,6 +113,10 @@ abstract class Piece implements IPiece {
 		return color;
 	}
 	
+	public String getColorPrefix() {
+		return colorPrefix;
+	}
+	
 	public char getPieceLetter() {
 		return pieceLetter;
 	}
@@ -100,4 +147,7 @@ abstract class Piece implements IPiece {
 
 	public void setEnPassentPiece(Board board, Position oldPosition, Position newPosition) {};
 	
+	public void setBoard(Board board) {
+		this.board = board;
+	}
 }

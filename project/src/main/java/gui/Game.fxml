@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1">
+	<HBox>
+		<Pane fx:id="gamePane" />
+		<Pane minWidth="2" style="-fx-background-color: BLACK" />
+		<VBox alignment="CENTER" spacing="10" minHeight="50" minWidth="150" style="-fx-background-color: LIGHTYELLOW">
+			<Button fx:id="declareWinnerButton" text="Declare winner" onAction="#handleDeclareWinnerButtonClicked" />
+			<Button fx:id="drawButton" text="Agree to draw" onAction="#handleDrawButtonClicked" />
+			<Label fx:id="gameInfoLabel" />
+			<Button fx:id="exitButton" text="Exit to main menu" onAction="#handleExitButtonClicked" />
+		</VBox>
+	</HBox>
+</AnchorPane>
+
