@@ -94,8 +94,11 @@ public class GameController implements Initializable  {
 		
 		saveButton.setOnAction(e -> {
 			fileName = saveNameInput.getText();
-			save = true;
-			window.close();
+			
+			if (fileName != "") {
+				save = true;
+				window.close();
+			}
 		});
 		
 		dontSaveButton.setOnAction(e-> {
