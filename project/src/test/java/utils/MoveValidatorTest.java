@@ -141,7 +141,7 @@ public class MoveValidatorTest {
 	}
 	
 	@Test
-	public void testIllegalCastlingDueToRookAllreadyMoved() {
+	public void testKingsCannotStandNextToEachother() {
 		game = new Game(GameType.PROMOTION);
 		board = game.getBoard();
 		IPiece whiteKing = game.getBoard().getPiece(Board.algNotToPosition("f6"));
@@ -161,7 +161,7 @@ public class MoveValidatorTest {
 	}
 	
 	@Test
-	public void testKingsCannotStandNextToEachother() {
+	public void testIllegalCastlingDueToRookAllreadyMoved() {
 		IPiece king = board.getPiece(Board.algNotToPosition("e1"));
 		IPiece rook = board.getPiece(Board.algNotToPosition("h1"));
 		
