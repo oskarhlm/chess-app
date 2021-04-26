@@ -142,6 +142,26 @@ public class MoveValidatorTest {
 	
 	@Test
 	public void testIllegalCastlingDueToRookAllreadyMoved() {
+		game = new Game(GameType.PROMOTION);
+		board = game.getBoard();
+		IPiece whiteKing = game.getBoard().getPiece(Board.algNotToPosition("f6"));
+		IPiece blackKing = game.getBoard().getPiece(Board.algNotToPosition("c5"));
+		
+		// Checking that the kings are where they are supposed to be
+		Assertions.assertEquals(whiteKing, board.getPiece(Board.algNotToPosition("f6")));
+		Assertions.assertEquals(blackKing, board.getPiece(Board.algNotToPosition("c5")));
+		
+		board.move("Ke5");
+		board.move("Kd5");
+		// Last move should not be legal because the black king is on e5
+		
+		// Checking that the white black is on e5 and that the white king hasn't moved form c5
+		Assertions.assertEquals(whiteKing, board.getPiece(Board.algNotToPosition("e5")));
+		Assertions.assertEquals(blackKing, board.getPiece(Board.algNotToPosition("c5")));
+	}
+	
+	@Test
+	public void testKingsCannotStandNextToEachother() {
 		IPiece king = board.getPiece(Board.algNotToPosition("e1"));
 		IPiece rook = board.getPiece(Board.algNotToPosition("h1"));
 		
