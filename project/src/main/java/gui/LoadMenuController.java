@@ -23,6 +23,7 @@ import utils.ISaveAndLoadHandler;
 import utils.SaveAndLoadHandler;
 
 public class LoadMenuController implements Initializable {
+	/* Controller for the load menu */
 	
 	@FXML VBox container;
 	@FXML ListView<String> gamesList;

@@ -42,6 +42,8 @@ public class King extends Piece {
 	}
 	
 	private void accountForOpponentKingVicinity(Board board, List<Position> destinations) {
+		/* Used to assure that the two kings cannot stand right next to eachother */
+		
 		List<Integer> dirs = Arrays.asList(-1, 0, 1);
 		Position opponentKingPosition = (this.getColor() == Color.WHITE) 
 				? board.getBlackKing().getPosition() : board.getWhiteKing().getPosition();

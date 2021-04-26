@@ -34,6 +34,8 @@ public class Pawn extends Piece {
 	
 	@Override
 	public void setEnPassentPiece(Board board, Position oldPosition, Position newPosition) {
+		/* Checkes if the pawn moved to squares forward and thus can be captured en passent */
+		
 		if (Math.abs(oldPosition.row - newPosition.row) == 2) {
 			board.setEnPassentPiece(this);
 		} else board.setEnPassentPiece(null);

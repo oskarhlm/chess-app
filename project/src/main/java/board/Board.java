@@ -267,7 +267,7 @@ public class Board {
 	}
 	
 	public void move(IPiece piece, Position position) {
-		/**/
+		/* Moves a piece to a position on the board */
 		
 		piece.move(this, position);
 		playerToMove = (playerToMove == whitePlayer) ? blackPlayer : whitePlayer;
@@ -278,6 +278,10 @@ public class Board {
 	}
 	
 	public boolean tryMove(IPiece piece, Position newPosition) {
+		/* Method that tries to move a piece to a position. 
+		 * Differs from move(IPiece piece, Position position) in that it checks if it is even a legal
+		 * position for the piece to move to. Returns false if this is not the case, true if it is. */
+		
 		if (getGame().getGameState() != GameState.NOT_STARTED && getGame().getGameState() != GameState.ONGOING) {
 			return false;
 		}
@@ -336,7 +340,7 @@ public class Board {
 	public void move(String algNot) {
 		/* Takes user input in the form of algebraic chess notation, analyses it
 		 * and moves the specified piece according to the input if it is a legal move.
-		 * Not used in the final version, but needed for testing purposes */
+		 * Not used in the final version, but needed for testing purposes. */
 		
 		Position newPosition = algNotToPosition(algNot);
 		char pieceLetter;

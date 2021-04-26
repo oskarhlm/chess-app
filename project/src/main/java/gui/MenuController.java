@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 
 public class MenuController {
+	/* Controller for the main menu */
 	
 	@FXML AnchorPane menu;
 	@FXML Button newGameButton;

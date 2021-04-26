@@ -1,6 +1,7 @@
 package utils;
 
 public final class Position {
+	/* Used to denote the position of a piece or square on the board */
 	
 	public int row;
 	public int col;

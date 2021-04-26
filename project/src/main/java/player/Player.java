@@ -7,6 +7,7 @@ import pieces.*;
 import utils.Color;
 
 public class Player {
+	/* A class for either the white or the black player in a given game */
 	
 	private Color color;
 	private List<IPiece> pieces = new ArrayList<IPiece>();

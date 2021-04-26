@@ -9,6 +9,10 @@ import player.Player;
 import utils.*;
 
 abstract class Piece implements IPiece {
+	/* Abstract class for all the different pieces.
+	 * Contains, for instance, instructions for what to do when a the image of a piece 
+	 * is clicked and moved, as well as a move(Board board, Position newPosition) method
+	 * that moves the piece to a new square in the "backend" */
 	
 	private Color color;
 	private Position position;

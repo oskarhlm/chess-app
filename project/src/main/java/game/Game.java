@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class Game {
+	/* Connects the GUI to the Board class and implements a GameState */
 	
 	public enum GameState {
 		NOT_STARTED,
@@ -40,22 +41,9 @@ public class Game {
 		System.out.println(board);
 	}
 	
-	public static void main(String[] args) throws FileNotFoundException, IOException {
-		Game game = new Game(GameType.CLASSIC_SETUP);
-		
-		Scanner sc = new Scanner(System.in);
-		String moveInput = sc.nextLine();
-		
-		while (!moveInput.equals("quit")) {
-			game.move(moveInput);
-			game.updateGameState();
-			moveInput = sc.nextLine();
-		}
-
-		sc.close();
-	}
-	
 	public void updateGameState() {
+		/* Updates the gameState. Is called whenever a change is made to the position */
+		
 		Player playerToMove = board.getPlayerToMove();
 		List<IPiece> playerToMovePieces = playerToMove.getPieces();
 		boolean hasLegalPieceMoves = false;
@@ -103,6 +91,9 @@ public class Game {
 	}
 	
 	public void setGameState(GameState gameState) {
+		/* Sets the gameState and tells the GUI to update the gameState message that is 
+		 * visible to the player ("Black has won!", "Stalemate!" etc.) */
+		
 		this.gameState = gameState;
 		
 		if (boardGUI != null) {

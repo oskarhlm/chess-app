@@ -24,6 +24,7 @@ import utils.ISaveAndLoadHandler;
 import utils.SaveAndLoadHandler;
 
 public class GameController implements Initializable  {
+	/* Controller for the game page */
 
 	@FXML Pane gamePane = new Pane();
 	@FXML Button exitButton;
@@ -40,11 +41,15 @@ public class GameController implements Initializable  {
 	ISaveAndLoadHandler saveAndLoadHandler = new SaveAndLoadHandler();
 	
 	public GameController() {
+		/* Constructor for a new game. An empty board is created */
+		
 		boardGUI = new ChessBoardGUI();
 		boardGUI.setController(this);
 	}
 	
 	public GameController(Game game, String fileName) {
+		/* Constructor for a loaded game. */
+		
 		boardGUI = new ChessBoardGUI(game);
 		boardGUI.setController(this);
 		this.fileName = fileName;

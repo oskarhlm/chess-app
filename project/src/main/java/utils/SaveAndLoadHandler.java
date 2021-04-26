@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SaveAndLoadHandler implements ISaveAndLoadHandler {
+	/* Saves and loads a game to or from a text file */
 	
 	public void save(Game game, String fileName) throws IOException {
 		Board board = game.getBoard();

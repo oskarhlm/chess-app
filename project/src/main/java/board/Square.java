@@ -7,6 +7,7 @@ import pieces.*;
 import utils.Position;
 
 public class Square extends Rectangle {
+	/* Class for a square on a board */
 	
 	private IPiece piece;
 	private Position position;
@@ -41,7 +42,10 @@ public class Square extends Rectangle {
 			board.getGame().getChessBoardGUI().getPieceGroup().getChildren().remove(piece.getImage());
 		}
 		
+		// Remove piece from the player who had it
 		piece.getPlayer().getPieces().remove(piece);
+		
+		// Removal from "backend board" is done from the removePiece() method
 	}
 	
 	@Override

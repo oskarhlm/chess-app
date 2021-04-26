@@ -9,6 +9,11 @@ import board.Square;
 import pieces.*;
 
 public class MoveValidator {
+	/* This class take a board and piece into its constructor.
+	 * It has methods for adding legal destinations connected to the piece.
+	 * Some of them are common for different pieces. 
+	 * These legalDestinations are used to check if the move that a player tries to make, 
+	 * is legal. */
 	
 	private Position position;
 	private Board board;
@@ -30,6 +35,8 @@ public class MoveValidator {
 	}
 	
 	public void addStraigths() {
+		/* Adds straigths to legalDestinations. Relevant for rooks, queens, kings and pawns. */
+		
 		for (int i : dir) {
 			for (int mult : multiplier) {
 				int row = position.row + i * mult;
@@ -82,6 +89,8 @@ public class MoveValidator {
 	}
 	
 	public void addDiagonals() {
+		/* Adds diagonals to legalDestinations. Relevant for bishops, queens and kings. */
+		
 		int pawnAttackRow = (piece.getColor() == Color.WHITE) ?  position.row - 1 : position.row + 1;
 		
 		for (int i : dir) {
@@ -115,6 +124,8 @@ public class MoveValidator {
 	}
 	
 	public void addKnightJump() {
+		/* Adds the unique knight move. Relevant only to knights. */
+		
 		for (int i : Arrays.asList(1, 2)) {
 			int j = (i == 1) ? 2 : 1;
 			for (int k : dir) {
@@ -142,6 +153,8 @@ public class MoveValidator {
 	}
 
 	public void addPawnMoves() {
+		/* Adds various types of pawn moves to a pawn. */
+		
 		int steps = (piece.hasMoved()) ? 1 : 2;
 		int stepDir = (piece.getColor() == Color.BLACK) ? 1 : -1;
 		
@@ -172,7 +185,6 @@ public class MoveValidator {
 				}
 			}
 			
-			// TODO: Does not capture on right square
 			Position enPassentSquare = new Position(piece.getPosition().row, col);
 			
 			if (! (row < 0 || row > 7 || col < 0 || col > 7)) {
@@ -187,6 +199,8 @@ public class MoveValidator {
 	}
 	
 	public void addCastling() {
+		/* Checks if a king is allowed to castle, and adds this move to its legalDestinations */
+		
 		if (!(this.piece instanceof King) || piece.hasMoved()) return;
 		
 		for (int direction : dir) {
@@ -221,6 +235,9 @@ public class MoveValidator {
 	}
 
 	private void accountForChecks() {
+		/* Checked for every position added to legalDestinations. 
+		 * Necessary for accounting for pins, double checks and such. */
+		
 		List<Position> destinationsToRemove = new ArrayList<>();
 		
 		for (Position destination : legalDestinations) {
@@ -251,6 +268,7 @@ public class MoveValidator {
  	}
 	
 	public List<Position> getLegalDestinations() {
+		// Accounting for checks before returning legalPositions
 		accountForChecks();
 		return legalDestinations;
 	}

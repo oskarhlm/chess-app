@@ -7,6 +7,7 @@ import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 
 public class ChessBoardGUI {
+	/* Creates a pane that contains the actual chess board. */
 	
 	Pane board;
 	public static final int SQUARE_SIZE = 70;

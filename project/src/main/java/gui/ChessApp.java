@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class ChessApp extends Application {
+	/* Root of the application. */
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
