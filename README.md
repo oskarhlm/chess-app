@@ -1,7 +1,5 @@
-# Prosjekt-repo for TDT4100
+# Project for subject TDT4100 (Object-Oriented Programming)
 
-Dette repoet inneholder et grunnoppsett for et prosjekt som bruker Java, JavaFX og JUnit5.
+This project was an assignment in which one was to use Java and Java FX to create an application of choice.  
 
-For å kode prosjektet, kan du enten importere det fra url-en til dette repoet i Eclipse, eller du kan forke det til et eget repo, som du deretter kan importere og bruke.
-Sistnevnte gir mulighet til å bruke git for kodesynkronisering og versjonskontroll, og er absolutt anbefalt, spesielt om dere er to som jobber sammen på prosjektet.
-Videoer for begge måter å importere repoet ligger på Blackboard.
+Run the application by cloning the project and compiling from the following file: project/src/main/java/gui/ChessApp.java
